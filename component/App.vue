@@ -35,7 +35,7 @@
             :key="tab.id"
             :name="tab.id">
             <span slot="label" class="success">{{ tab.name }}</span>
-            <iframe v-bind:src="tab.uri" style="width:100%;height:89%;border:none;"></iframe>
+            <webview v-bind:src="tab.uri" style="width:100%;height:89%;border:none;" nodeintegration allowpopups></webview>
           </el-tab-pane>
         </el-tabs>
       </el-main>
