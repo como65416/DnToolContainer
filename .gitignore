@@ -1,0 +1,4 @@
+dist/
+node_modules
+*-x64/
+package-lock.json
