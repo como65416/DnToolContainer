@@ -1,16 +1,16 @@
 # Dn Tool Container
 
-An convenient APP can install anything tools which are created as static html file. 
+An convenient APP can install anything tools which are created as static html file.
 
-## Usage 
+## Usage
 
 ### Install tool
 
-1. Create an directory to `~/.dn-tool-container/installed_packages`
+1. Create an directory on `~/.dn-tool-container/installed_packages`
 
 > Example : `~/.dn-tool-container/installed_packages/encode-decode/`
 
-2. Create your tool static html file to the directory
+2. Add your tool static html file to the directory
 
 > Example Directory files:
 
@@ -54,3 +54,5 @@ An convenient APP can install anything tools which are created as static html fi
 └── js
     └── main.js
 ```
+
+4. Run the App
