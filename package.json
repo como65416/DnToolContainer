@@ -4,7 +4,10 @@
   "version": "0.1.0",
   "main": "electron-main.js",
   "dependencies": {
+    "adm-zip": "^0.4.11",
+    "axios": "^0.18.0",
     "element-ui": "^2.4.7",
+    "rimraf": "^2.6.2",
     "vue": "^2.5.16"
   },
   "devDependencies": {
@@ -22,8 +25,7 @@
     "vue-template-compiler": "^2.5.16",
     "url-loader": "^1.0.1",
     "webpack": "^4.12.0",
-    "webpack-cli": "^3.0.8",
-    "webpack-dev-server": "^3.1.8"
+    "webpack-cli": "^3.0.8"
   },
   "scripts": {
     "build": "webpack",
