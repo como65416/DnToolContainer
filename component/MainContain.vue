@@ -1,8 +1,8 @@
 <template>
-  <el-main>
+  <el-main style="padding: 10px; height: 100%;">
     <el-tabs
       type="border-card"
-      style="height: 94%;"
+      style="height: 99%;"
       @tab-remove="closeTab"
       v-model="activity_tab_id">
       <el-tab-pane closable
