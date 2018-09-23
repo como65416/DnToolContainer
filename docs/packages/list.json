@@ -5,5 +5,12 @@
     "iconUrl" : "https://como65416.github.io/DnToolContainer/packages/icons/icon001.png",
     "description" : "Some code beautify tool",
     "downloadUrl" : "https://como65416.github.io/DnToolContainer/packages/simple-beautifier-formatter-tool.zip"
+  },
+  {
+    "packageId" : "dfff5e5c63811c27649966b2",
+    "packageName" : "Encode/Decode And Encrypt",
+    "iconUrl" : "https://como65416.github.io/DnToolContainer/packages/icons/icon002.png",
+    "description" : "Some encode, decode and encrypt tool",
+    "downloadUrl" : "https://como65416.github.io/DnToolContainer/packages/simple-encode-decode-tool.zip"
   }
 ]
