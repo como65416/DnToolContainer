@@ -4,13 +4,45 @@
     "packageName" : "Beautifier/Formatter",
     "iconUrl" : "https://como65416.github.io/DnToolContainer/packages/icons/icon001.png",
     "description" : "Some code beautify tool",
-    "downloadUrl" : "https://como65416.github.io/DnToolContainer/packages/simple-beautifier-formatter-tool.zip"
+    "downloadUrl" : "https://como65416.github.io/DnToolContainer/packages/simple-beautifier-formatter-tool.zip",
+    "options" : [
+      {
+        "name" : "CSS Formatter",
+        "uri" : "css-formatter.html"
+      },
+      {
+        "name" : "JSON Formatter",
+        "uri" : "json-formatter.html"
+      },
+      {
+        "name" : "SQL Formatter",
+        "uri" : "sql-formatter.html"
+      },
+      {
+        "name" : "XML Formatter",
+        "uri" : "xml-formatter.html"
+      }
+    ]
   },
   {
     "packageId" : "dfff5e5c63811c27649966b2",
     "packageName" : "Encode/Decode And Encrypt",
     "iconUrl" : "https://como65416.github.io/DnToolContainer/packages/icons/icon002.png",
     "description" : "Some encode, decode and encrypt tool",
-    "downloadUrl" : "https://como65416.github.io/DnToolContainer/packages/simple-encode-decode-tool.zip"
+    "downloadUrl" : "https://como65416.github.io/DnToolContainer/packages/simple-encode-decode-tool.zip",
+    "options" : [
+      {
+        "name" : "BASE 64 Encode/Decode",
+        "uri" : "base64-encode-decode.html"
+      },
+      {
+        "name" : "SHA Encrypt",
+        "uri" : "sha-encrypt.html"
+      },
+      {
+        "name" : "MD5 Encrypt",
+        "uri" : "md5-encrypt.html"
+      }
+    ]
   }
 ]
