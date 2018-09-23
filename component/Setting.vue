@@ -2,7 +2,7 @@
   <el-tabs v-model="activeName">
     <el-tab-pane label="Install Package" name="install_package">
       <el-table
-        :data="tableData"
+        :data="packageInfos"
         height="450"
         style="width: 100%">
         <el-table-column
@@ -57,6 +57,7 @@ PackageUtil.getAllStorePackages().then(storePackages => {
     for (let installPackage of installPackages) {
       if (installPackage.packageFrom == storePackage.packageFrom && installPackage.packageId == storePackage.packageId) {
         storePackage.path = installPackage.path;
+        storePackage.icon = installPackage.icon;
         installed = true;
         break;
       }
@@ -70,30 +71,30 @@ export default {
   data() {
     return {
       activeName: 'install_package',
-      tableData: data.packages
+      packageInfos: data.packages
     };
   },
   methods: {
     installPackage(option) {
       let self = this;
-      for (let i in this.tableData) {
-        if (this.tableData[i].packageFrom == option.packageFrom && this.tableData[i].packageId == option.packageId) {
-          let tableData = this.tableData[i];
-          tableData.status = 'installing';
-          PackageUtil.installPackageFromUrl(this.tableData[i].downloadUrl, function (res) {
-            tableData.status = 'installed';
-            tableData.path = res.path;
+      for (let i in this.packageInfos) {
+        if (this.packageInfos[i].packageFrom == option.packageFrom && this.packageInfos[i].packageId == option.packageId) {
+          let packageInfo = this.packageInfos[i];
+          packageInfo.status = 'installing';
+          PackageUtil.installPackage(packageInfo, function (res) {
+            packageInfo.status = 'installed';
+            packageInfo.path = res.path;
             self.$notify({
               title: 'Success',
-              message: 'Install "' + option.packageName + '" Success',
+              message: 'Install "' + packageInfo.packageName + '" Success',
               type: 'success'
             });
-            self.$emit('packages-changed', option);
+            self.$emit('packages-changed');
           }, function (err) {
-            tableData.status = 'not install';
+            packageInfo.status = 'not install';
             self.$notify.error({
               title: 'Error',
-              message: 'Install "' + option.packageName + '" Fail',
+              message: 'Install "' + packageInfo.packageName + '" Fail',
             });
           });
           break;
@@ -103,23 +104,23 @@ export default {
     uninstallPackage(option) {
       let self = this;
       if (confirm("Are you sure uninstall '" + option.packageName + "' ?")) {
-        for (let i in this.tableData) {
-          if (this.tableData[i].packageFrom == option.packageFrom && this.tableData[i].packageId == option.packageId) {
-            let tableData = this.tableData[i];
-            tableData.status = 'uninstalling';
-            PackageUtil.uninstallPackage(option.path, function () {
-              tableData.status = 'not install';
+        for (let i in this.packageInfos) {
+          if (this.packageInfos[i].packageFrom == option.packageFrom && this.packageInfos[i].packageId == option.packageId) {
+            let packageInfo = this.packageInfos[i];
+            packageInfo.status = 'uninstalling';
+            PackageUtil.uninstallPackage(packageInfo, function () {
+              packageInfo.status = 'not install';
               self.$notify({
                 title: 'Success',
-                message: 'Uninstall "' + option.packageName + '" Success',
+                message: 'Uninstall "' + packageInfo.packageName + '" Success',
                 type: 'success'
               });
-              self.$emit('packages-changed', option);
+              self.$emit('packages-changed');
             }, function () {
-              tableData.status = 'installed';
+              packageInfo.status = 'installed';
               self.$notify.error({
                 title: 'Error',
-                message: 'Uninstall "' + option.packageName + '" Fail',
+                message: 'Uninstall "' + packageInfo.packageName + '" Fail',
               });
             })
             break;

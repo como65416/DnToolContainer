@@ -41,8 +41,8 @@ export default {
     };
   },
   methods: {
-    optionClicked: function (option) {
-      this.$refs.main.addTab(option);
+    optionClicked: function (info) {
+      this.$refs.main.addTab(info);
     },
     reloadPackages: function () {
       this.menu_configs = ConfigManager.getMenuConfig();

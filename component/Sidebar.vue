@@ -13,18 +13,18 @@
         <i slot="prefix" class="el-input__icon el-icon-search"></i>
       </el-input>
       <el-submenu
-        v-for="(menu_config, index) in menu_configs"
-        v-bind:index="menu_config.id"
-        v-show="menu_config.visable"
-        :key="menu_config.id">
+        v-for="(packageInfo, index) in packageInfos"
+        v-bind:index="packageInfo.id"
+        v-show="packageInfo.visable"
+        :key="packageInfo.id">
         <template slot="title">
-          <img v-bind:src="menu_config.icon_uri" style="height:25px;" />
-          <span slot="title">{{ menu_config.packageName }}</span>
+          <img v-bind:src="icon_directory_path + packageInfo.icon" style="height:25px;" />
+          <span slot="title">{{ packageInfo.packageName }}</span>
         </template>
         <el-menu-item
-          v-for="(option, index2) in menu_config.options"
+          v-for="(option, index2) in packageInfo.options"
           v-bind:index="option.id"
-          v-on:click="clickOption(option)"
+          v-on:click="clickOption(packageInfo, index2)"
           v-show="option.visable"
           :key="option.id">
           {{ option.name }}
@@ -38,51 +38,60 @@
 </style>
 
 <script>
+import RcConfig from './../lib/RcConfig';
+
 export default {
   props: ['sidebar_config'],
   data() {
-    let menu_configs = this.sidebar_config;
-    for (let i in menu_configs) {
-      menu_configs[i].visable = true;
-      for (let j in menu_configs[i].options) {
-        menu_configs[i].options[j].visable = true;
+    let packageInfos = this.sidebar_config;
+    for (let i in packageInfos) {
+      packageInfos[i].visable = true;
+      for (let j in packageInfos[i].options) {
+        packageInfos[i].options[j].visable = true;
       }
     }
 
     return {
-      menu_configs: menu_configs,
-      search_keyword: ''
+      packageInfos: packageInfos,
+      search_keyword: '',
+      icon_directory_path: RcConfig.getIconDirectoryPath(),
+      package_install_path: RcConfig.getPackageInstallPath()
     };
   },
   methods: {
-    clickOption: function (option) {
-      this.$emit('option-clicked', option);
+    clickOption: function (packageInfo, option_index) {
+      let info = {
+        name: packageInfo.options[option_index].name,
+        uri: this.package_install_path + packageInfo.directory + "/" + packageInfo.options[option_index].uri,
+        id: packageInfo.packageId + "-" + option_index
+      }
+      this.$emit('option-clicked', info);
     }
   },
   watch: {
     search_keyword: function () {
-      for (let i in this.menu_configs) {
+      for (let i in this.packageInfos) {
         let is_match = false;
-        for (let j in this.menu_configs[i].options) {
-          if (this.search_keyword == '' || this.menu_configs[i].options[j].name.toLowerCase().indexOf(this.search_keyword.toLowerCase()) != -1) {
-            this.menu_configs[i].options[j].visable = true;
+        for (let j in this.packageInfos[i].options) {
+          if (this.search_keyword == '' || this.packageInfos[i].options[j].name.toLowerCase().indexOf(this.search_keyword.toLowerCase()) != -1) {
+            this.packageInfos[i].options[j].visable = true;
             is_match = true;
           } else {
-            this.menu_configs[i].options[j].visable = false;
+            this.packageInfos[i].options[j].visable = false;
           }
         }
-        this.menu_configs[i].visable = is_match;
+        this.packageInfos[i].visable = is_match;
       }
     },
     sidebar_config: function () {
-      let menu_configs = this.sidebar_config;
-      for (let i in menu_configs) {
-        menu_configs[i].visable = true;
-        for (let j in menu_configs[i].options) {
-          menu_configs[i].options[j].visable = true;
+      let packageInfos = this.sidebar_config;
+      for (let i in packageInfos) {
+        packageInfos[i].visable = true;
+        for (let j in packageInfos[i].options) {
+          packageInfos[i].options[j].visable = true;
         }
       }
-      this.menu_configs = menu_configs;
+      this.packageInfos = packageInfos;
     }
   }
 }
