@@ -1,58 +1,23 @@
 # Dn Tool Container
 
-An convenient APP can install anything tools which are created as static html file.
+An application can install many convenient tools.
+
+![](resource/img004.png)
 
 ## Usage
 
 ### Install tool
 
-1. Create an directory on `~/.dn-tool-container/installed_packages`
+* Open the Applcation and click ![icon](resource/icon01.png) button
 
-> Example : `~/.dn-tool-container/installed_packages/encode-decode/`
+![](resource/img001.png)
 
-2. Add your tool static html file to the directory
+* Select package which you want to install and click the install button.
 
-> Example Directory files:
+![](resource/img002.png)
 
-```
-.
-├── md5.html
-├── base64.html
-└── js
-    └── main.js
-```
+![](resource/img003.png)
 
-3. Add `icon.png` and `config.json` file to the directory
+* Enjoy it !
 
-> config.json structure :
-
-```json
-{
-    "groupName" : "Encode/Decdoe Utils",
-    "options" : [
-      {
-        "name" : "MD5 Encode/Decdoe",
-        "uri" : "md5.html"
-      },
-      {
-        "name" : "Base64 Encode/Decdoe",
-        "uri" : "base64.html"
-      }
-
-    ]
-}
-```
-
-> Example Directory files:
-
-```
-.
-├── config.json
-├── icon.png
-├── md5.html
-├── base64.html
-└── js
-    └── main.js
-```
-
-4. Run the App
+![](resource/img004.png)
