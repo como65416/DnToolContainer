@@ -84,6 +84,7 @@ export default {
           PackageUtil.installPackage(packageInfo, function (res) {
             packageInfo.status = 'installed';
             packageInfo.path = res.path;
+            packageInfo.icon = res.icon;
             self.$notify({
               title: 'Success',
               message: 'Install "' + packageInfo.packageName + '" Success',
