@@ -37,14 +37,12 @@ export default {
           return;
         }
       }
-      console.log(option);
       let new_tab = {
         id: 'tab' + this.next_tab_id,
         name: option.name,
         uri: option.uri,
         option_id: option.id
       };
-      console.log(new_tab);
       this.tabs.push(new_tab);
       this.activity_tab_id = 'tab' + this.next_tab_id;
       this.next_tab_id++;
