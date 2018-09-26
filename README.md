@@ -1,6 +1,8 @@
 # Dn Tool Container
 
-An application can install many convenient tools.
+<img src="https://img.shields.io/github/license/como65416/DnToolContainer.svg"> <img src="https://img.shields.io/badge/platform-MacOS%7CWindows%7CLinux-orange.svg">
+
+An application can install many convenient tools for platforms of OS X 、Windows and Linux .
 
 ![](resource/img004.png)
 
