@@ -8,9 +8,9 @@ An application can install many convenient tools for platforms of OS X 、Window
 
 #### Package Source Code
 
-Beautifier/Formatter : https://github.com/como65416/simple-beautifier-formatter-tool
+* Beautifier/Formatter : https://github.com/como65416/simple-beautifier-formatter-tool
 
-Encode/Decode And Encrypt : https://github.com/como65416/simple-encode-decode-tool
+* Encode/Decode And Encrypt : https://github.com/como65416/simple-encode-decode-tool
 
 ## Usage
 
