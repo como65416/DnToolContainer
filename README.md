@@ -4,6 +4,12 @@ An application can install many convenient tools.
 
 ![](resource/img004.png)
 
+#### Package Source Code
+
+Beautifier/Formatter : https://github.com/como65416/simple-beautifier-formatter-tool
+
+Encode/Decode And Encrypt : https://github.com/como65416/simple-encode-decode-tool
+
 ## Usage
 
 ### Install tool
