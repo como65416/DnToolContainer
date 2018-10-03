@@ -8,17 +8,34 @@ function createWindow() {
   const indexPageURL = `file://${__dirname}/index.html`;
   win.loadURL(indexPageURL);
 
-  const menu = new Menu();
-  menu.append(new MenuItem({
-    label: 'Help', submenu: [
-        {
-          role: 'toggledevtools'
-        }
-      ]
-    }
-  ));
+  const menuTemplate = [
+  {
+    label: 'Electron',
+    submenu: [
+      {role: 'quit'}
+    ]
+  },
+  {
+    label: 'Edit',
+    submenu: [
+      {role: 'undo'},
+      {role: 'redo'},
+      {role: 'cut'},
+      {role: 'copy'},
+      {role: 'paste'},
+      {role: 'delete'},
+      {role: 'selectall'}
+    ]
+  },
+  {
+    label: 'Help',
+    submenu: [
+      {role: 'toggledevtools'}
+    ]
+  }];
 
-  win.setMenu(menu);
+  const applicationMenu = Menu.buildFromTemplate(menuTemplate)
+  Menu.setApplicationMenu(applicationMenu)
 
   win.on('closed', () => {
     win = null
