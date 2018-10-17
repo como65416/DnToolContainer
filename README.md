@@ -14,6 +14,10 @@ An application can install many convenient tools for platforms of OS X 、Window
 
 * Encode/Decode And Encrypt : https://github.com/como65416/simple-encode-decode-tool
 
+* Data Converter : https://github.com/como65416/simple-data-converter
+
+* Preview Editor : https://github.com/como65416/simple-preview-editor
+
 ## Usage
 
 ### Install tool
