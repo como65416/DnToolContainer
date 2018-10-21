@@ -3,10 +3,12 @@ const { app, BrowserWindow, Menu, MenuItem} = require('electron')
 let win
 
 function createWindow() {
-  win = new BrowserWindow({ width: 1280, height: 720, icon: 'icon.png' })
-
-  const indexPageURL = `file://${__dirname}/index.html`;
-  win.loadURL(indexPageURL);
+  let indexPageURL = `file://${__dirname}/index.html`;
+  let windowConfig = {
+    width: 1280,
+    height: 720,
+    icon: 'icon.png'
+  };
 
   const menuTemplate = [
   {
@@ -26,13 +28,25 @@ function createWindow() {
       {role: 'delete'},
       {role: 'selectall'}
     ]
-  },
-  {
-    label: 'Help',
-    submenu: [
-      {role: 'toggledevtools'}
-    ]
   }];
+
+  if (process.argv.includes('--dev')) {
+    indexPageURL = `http://localhost:8089/index.html`;
+    windowConfig.webPreferences = {
+      webSecurity: false
+    }
+    menuTemplate.push({
+      label: 'Development',
+      submenu: [
+        {role: 'reload'},
+        {role: 'forcereload'},
+        {role: 'toggledevtools'}
+      ]
+    });
+  }
+
+  win = new BrowserWindow(windowConfig);
+  win.loadURL(indexPageURL);
 
   const applicationMenu = Menu.buildFromTemplate(menuTemplate)
   Menu.setApplicationMenu(applicationMenu)

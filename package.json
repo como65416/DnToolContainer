@@ -28,8 +28,10 @@
     "webpack-cli": "^3.0.8"
   },
   "scripts": {
+    "web": "webpack-dev-server --mode=development --port=8089 --watch --hot",
     "build": "webpack",
     "start": "electron .",
+    "start-dev": "electron --dev .",
     "package-linux": "electron-packager . DN-Tool-Container --overwrite --platform=linux --arch=x64",
     "package-darwin": "electron-packager . DN-Tool-Container --icon=icon.icns --overwrite --platform=darwin --arch=x64",
     "package-win32": "electron-packager . DN-Tool-Container --overwrite --platform=win32 --arch=x64"
