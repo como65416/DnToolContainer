@@ -9,6 +9,10 @@ It can get more and more convenience tool in the future and no need reinstall Ap
 
 ![](resource/img004.png)
 
+### Downloads
+
+[GitHub Releases](https://github.com/como65416/DnToolContainer/releases)
+
 ### Package Source Code
 
 * Beautifier/Formatter : https://github.com/como65416/simple-beautifier-formatter-tool
