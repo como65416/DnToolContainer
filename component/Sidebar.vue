@@ -18,7 +18,7 @@
         v-show="packageInfo.visable"
         :key="packageInfo.id">
         <template slot="title">
-          <img v-bind:src="icon_directory_path + packageInfo.icon" style="height:25px;" />
+          <img v-bind:src="'file://' + icon_directory_path + packageInfo.icon" style="height:25px;" />
           <span slot="title">{{ packageInfo.packageName }}</span>
         </template>
         <el-menu-item

@@ -55,7 +55,7 @@ PackageUtil.getAllStorePackages().then(storePackages => {
   for (let storePackage of storePackages) {
     let installed = false;
     for (let installPackage of installPackages) {
-      if (installPackage.packageFrom == storePackage.packageFrom && installPackage.packageId == storePackage.packageId) {
+      if (installPackage.host == storePackage.host && installPackage.packageId == storePackage.packageId) {
         storePackage.path = installPackage.path;
         storePackage.icon = installPackage.icon;
         installed = true;
@@ -78,10 +78,10 @@ export default {
     installPackage(option) {
       let self = this;
       for (let i in this.packageInfos) {
-        if (this.packageInfos[i].packageFrom == option.packageFrom && this.packageInfos[i].packageId == option.packageId) {
+        if (this.packageInfos[i].host == option.host && this.packageInfos[i].packageId == option.packageId) {
           let packageInfo = this.packageInfos[i];
           packageInfo.status = 'installing';
-          PackageUtil.installPackage(packageInfo, function (res) {
+          PackageUtil.installPackage(packageInfo).then(function (res) {
             packageInfo.status = 'installed';
             packageInfo.path = res.path;
             packageInfo.icon = res.icon;
@@ -91,7 +91,7 @@ export default {
               type: 'success'
             });
             self.$emit('packages-changed');
-          }, function (err) {
+          }).catch(function (err) {
             packageInfo.status = 'not install';
             self.$notify.error({
               title: 'Error',
@@ -106,10 +106,10 @@ export default {
       let self = this;
       if (confirm("Are you sure uninstall '" + option.packageName + "' ?")) {
         for (let i in this.packageInfos) {
-          if (this.packageInfos[i].packageFrom == option.packageFrom && this.packageInfos[i].packageId == option.packageId) {
+          if (this.packageInfos[i].host == option.host && this.packageInfos[i].packageId == option.packageId) {
             let packageInfo = this.packageInfos[i];
             packageInfo.status = 'uninstalling';
-            PackageUtil.uninstallPackage(packageInfo, function () {
+            PackageUtil.uninstallPackage(packageInfo).then(() => {
               packageInfo.status = 'not install';
               self.$notify({
                 title: 'Success',
@@ -117,13 +117,13 @@ export default {
                 type: 'success'
               });
               self.$emit('packages-changed');
-            }, function () {
+            }).catch((e) => function () {
               packageInfo.status = 'installed';
               self.$notify.error({
                 title: 'Error',
                 message: 'Uninstall "' + packageInfo.packageName + '" Fail',
               });
-            })
+            });
             break;
           }
         }
