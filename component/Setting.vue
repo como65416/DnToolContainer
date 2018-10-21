@@ -45,36 +45,48 @@
 
 <script>
 import PackageUtil from '../lib/PackageUtil';
-
-let data = {
-  packages : []
-};
-
-PackageUtil.getAllStorePackages().then(storePackages => {
-  let installPackages = PackageUtil.getInstalledPackages();
-  for (let storePackage of storePackages) {
-    let installed = false;
-    for (let installPackage of installPackages) {
-      if (installPackage.host == storePackage.host && installPackage.packageId == storePackage.packageId) {
-        storePackage.path = installPackage.path;
-        storePackage.icon = installPackage.icon;
-        installed = true;
-        break;
-      }
-    }
-    storePackage.status = (installed) ? 'installed' : 'not install' ;
-  }
-  data.packages = storePackages;
-});
+import RcConfig from '../lib/RcConfig';
 
 export default {
   data() {
     return {
       activeName: 'install_package',
-      packageInfos: data.packages
+      packageInfos: []
     };
   },
+  created: function () {
+    this.reloadPackageMenu();
+  },
   methods: {
+    reloadPackageMenu: function () {
+      PackageUtil.getAllStorePackages().then(storePackages => {
+        let installedPackages = PackageUtil.getInstalledPackages();
+        let iconDirPath = RcConfig.getIconDirectoryPath();
+        for (let installedPackage of installedPackages) {
+          installedPackage.status = 'installed';
+          installedPackage.downloadUrl = null;
+          installedPackage.iconUrl = 'file://' + iconDirPath + installedPackage.icon;
+        }
+        let menu = installedPackages;
+
+        for (let storePackage of storePackages) {
+          let isInstelled = false;
+          for (let option of menu) {
+            if (option.host == storePackage.host && option.packageId == storePackage.packageId) {
+              option.downloadUrl = storePackage.downloadUrl;
+              option.iconUrl = storePackage.iconUrl;
+              isInstelled = true;
+              break;
+            }
+          }
+          if (!isInstelled) {
+            storePackage.status = 'not install';
+            menu.push(storePackage);
+          }
+        }
+        this.packageInfos = menu;
+      });
+    },
     installPackage(option) {
       let self = this;
       for (let i in this.packageInfos) {
@@ -110,7 +122,11 @@ export default {
             let packageInfo = this.packageInfos[i];
             packageInfo.status = 'uninstalling';
             PackageUtil.uninstallPackage(packageInfo).then(() => {
-              packageInfo.status = 'not install';
+              if (option.downloadUrl != null) {
+                packageInfo.status = 'not install';
+              } else {
+                this.packageInfos = this.packageInfos.slice(0, i).concat(this.packageInfos.slice(i + 1));
+              }
               self.$notify({
                 title: 'Success',
                 message: 'Uninstall "' + packageInfo.packageName + '" Success',

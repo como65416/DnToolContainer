@@ -30,7 +30,7 @@ import Sidebar from '../component/Sidebar.vue';
 import MainContain from '../component/MainContain.vue';
 import Setting from '../component/Setting.vue';
 
-let configs = ConfigManager.getMenuConfig();
+let configs = ConfigManager.getSidebarMenuConfig();
 
 export default {
   data() {
@@ -45,7 +45,7 @@ export default {
       this.$refs.main.addTab(info);
     },
     reloadPackages: function () {
-      this.menu_configs = ConfigManager.getMenuConfig();
+      this.menu_configs = ConfigManager.getSidebarMenuConfig();
     }
   },
   components: {
