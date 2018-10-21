@@ -7,7 +7,7 @@ function createWindow() {
   let windowConfig = {
     width: 1280,
     height: 720,
-    icon: 'icon.png'
+    icon: __dirname + '/icon.png'
   };
 
   const menuTemplate = [
