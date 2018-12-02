@@ -32,8 +32,8 @@
     "build": "webpack",
     "start": "electron .",
     "start-dev": "electron --dev .",
-    "package-linux": "electron-packager . DN-Tool-Container --overwrite --platform=linux --arch=x64",
-    "package-darwin": "electron-packager . DN-Tool-Container --icon=icon.icns --overwrite --platform=darwin --arch=x64",
-    "package-win32": "electron-packager . DN-Tool-Container --overwrite --platform=win32 --arch=x64"
+    "package-linux": "rm -rf .package.tmp && mkdir .package.tmp && cp -rf dist index.html package.json icon.png icon.icns electron-main.js .package.tmp/. && electron-packager .package.tmp DN-Tool-Container --overwrite --platform=linux --arch=x64 && rm -rf .package.tmp",
+    "package-darwin": "rm -rf .package.tmp && mkdir .package.tmp && cp -rf dist index.html package.json icon.png icon.icns electron-main.js .package.tmp/. && electron-packager .package.tmp DN-Tool-Container --icon=icon.icns --overwrite --platform=darwin --arch=x64 && rm -rf .package.tmp",
+    "package-win32": "rm -rf .package.tmp && mkdir .package.tmp && cp -rf dist index.html package.json icon.png icon.icns electron-main.js .package.tmp/. && electron-packager .package.tmp DN-Tool-Container --overwrite --platform=win32 --arch=x64 && rm -rf .package.tmp"
   }
 }
