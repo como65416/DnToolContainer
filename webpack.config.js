@@ -1,15 +1,22 @@
 const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
-  entry: './webpack-main.js',
+  mode: 'development',
   target: 'electron-renderer',
+  entry: [
+    './webpack-main.js'
+  ],
   output: {
     filename: 'bundle.js',
     chunkFilename: '[name].bundle.js',
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, './public/dist'),
     publicPath: 'dist/'
+  },
+  devServer: {
+    contentBase: path.join(__dirname, 'public'),
+    publicPath: '/dist/'
   },
   module: {
     rules: [
@@ -24,9 +31,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          use: ['css-loader'],
-        }),
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader'
+        ]
       },
       {
         test: /\.(png|woff|woff2|eot|ttf|svg)$/,
@@ -35,7 +43,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin({
+    new MiniCssExtractPlugin({
       filename: `bundle.css`,
     }),
     new VueLoaderPlugin()
