@@ -25,10 +25,10 @@
 </style>
 
 <script>
-import ConfigManager from '../lib/ConfigManager';
-import Sidebar from '../component/Sidebar.vue';
-import MainContain from '../component/MainContain.vue';
-import Setting from '../component/Setting.vue';
+import ConfigManager from './lib/ConfigManager';
+import Sidebar from './component/Sidebar.vue';
+import MainContain from './component/MainContain.vue';
+import Setting from './component/Setting.vue';
 
 let configs = ConfigManager.getSidebarMenuConfig();
 
