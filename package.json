@@ -1,7 +1,6 @@
 {
   "name": "DN-Tool-Container",
   "productName": "DN Tool Container",
-  "version": "0.1.0",
   "main": "electron-main.js",
   "dependencies": {
     "adm-zip": "^0.4.11",
@@ -11,29 +10,34 @@
     "vue": "^2.5.16"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/runtime": "^7.2.0",
+    "babel-loader": "^8.0.4",
     "css-loader": "^0.28.11",
-    "electron": "^1.7.5",
-    "electron-packager": "^12.1.2",
-    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "electron": "^3.0.13",
+    "electron-packager": "^13.0.0",
     "file-loader": "^1.1.11",
+    "mini-css-extract-plugin": "^0.4.4",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
     "style-loader": "^0.21.0",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "url-loader": "^1.0.1",
     "vue-loader": "^15.2.4",
     "vue-template-compiler": "^2.5.16",
-    "url-loader": "^1.0.1",
     "webpack": "^4.12.0",
-    "webpack-cli": "^3.0.8"
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.5"
   },
   "scripts": {
-    "web": "webpack-dev-server --mode=development --port=8089 --watch --hot",
-    "build": "webpack",
+    "build": "webpack --config webpack.prod.js",
     "start": "electron .",
-    "start-dev": "electron --dev .",
-    "package-linux": "rm -rf .package.tmp && mkdir .package.tmp && cp -rf dist index.html package.json icon.png icon.icns electron-main.js .package.tmp/. && electron-packager .package.tmp DN-Tool-Container --overwrite --platform=linux --arch=x64 && rm -rf .package.tmp",
-    "package-darwin": "rm -rf .package.tmp && mkdir .package.tmp && cp -rf dist index.html package.json icon.png icon.icns electron-main.js .package.tmp/. && electron-packager .package.tmp DN-Tool-Container --icon=icon.icns --overwrite --platform=darwin --arch=x64 && rm -rf .package.tmp",
-    "package-win32": "rm -rf .package.tmp && mkdir .package.tmp && cp -rf dist index.html package.json icon.png icon.icns electron-main.js .package.tmp/. && electron-packager .package.tmp DN-Tool-Container --overwrite --platform=win32 --arch=x64 && rm -rf .package.tmp"
+    "start-dev": "node start-dev.js",
+    "package-linux": "rm -rf .package.tmp && mkdir .package.tmp && cp -rf public package.json icon.png icon.icns electron-main.js .package.tmp/. && electron-packager .package.tmp DN-Tool-Container --overwrite --platform=linux --arch=x64 && rm -rf .package.tmp",
+    "package-darwin": "rm -rf .package.tmp && mkdir .package.tmp && cp -rf public package.json icon.png icon.icns electron-main.js .package.tmp/. && electron-packager .package.tmp DN-Tool-Container --icon=icon.icns --overwrite --platform=darwin --arch=x64 && rm -rf .package.tmp",
+    "package-win32": "rm -rf .package.tmp && mkdir .package.tmp && cp -rf public package.json icon.png icon.icns electron-main.js .package.tmp/. && electron-packager .package.tmp DN-Tool-Container --overwrite --platform=win32 --arch=x64 && rm -rf .package.tmp"
   }
 }

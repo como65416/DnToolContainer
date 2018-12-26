@@ -3,7 +3,7 @@ const { app, BrowserWindow, Menu, MenuItem} = require('electron')
 let win
 
 function createWindow() {
-  let indexPageURL = `file://${__dirname}/index.html`;
+  let indexPageURL = `file://${__dirname}/public/index.html`;
   let windowConfig = {
     width: 1280,
     height: 720,

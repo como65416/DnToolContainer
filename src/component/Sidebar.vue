@@ -38,7 +38,7 @@
 </style>
 
 <script>
-import RcConfig from './../lib/RcConfig';
+import RcConfig from '../lib/RcConfig';
 
 export default {
   props: ['sidebar_config'],
