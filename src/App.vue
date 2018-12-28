@@ -38,7 +38,7 @@ export default {
       menu_configs: configs,
       dialogTableVisible: false,
       sidebarVisible: true,
-      is_dev_tools_enabled: true
+      is_dev_tools_enabled: false
     };
   },
   methods: {
