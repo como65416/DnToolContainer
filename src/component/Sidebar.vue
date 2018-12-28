@@ -62,7 +62,7 @@ export default {
     clickOption: function (packageInfo, option_index) {
       let info = {
         name: packageInfo.options[option_index].name,
-        uri: this.package_install_path + packageInfo.directory + "/" + packageInfo.options[option_index].uri,
+        uri: "file://" + this.package_install_path + packageInfo.directory + "/" + packageInfo.options[option_index].uri,
         id: packageInfo.packageId + "-" + option_index
       }
       this.$emit('option-clicked', info);
