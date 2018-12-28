@@ -9,8 +9,11 @@
         v-for="tab in tabs"
         :key="tab.id"
         :name="tab.id">
-        <span slot="label" class="success">{{ tab.name }}</span>
-        <webview v-bind:src="tab.uri" style="width:100%;height:89%;border:none;" nodeintegration allowpopups></webview>
+        <span slot="label" class="success">
+          {{ tab.name }}
+          <el-button size="mini" icon="el-icon-setting" @click="openTabDevTools(tab.id)" v-if="is_dev_tools_enabled" circle></el-button>
+        </span>
+        <webview v-bind:src="tab.uri" v-bind:id="'webview-' + tab.id" style="width:100%;height:89%;border:none;" nodeintegration allowpopups></webview>
       </el-tab-pane>
     </el-tabs>
   </el-main>
@@ -21,12 +24,14 @@
 
 <script>
 export default {
+  props: ['is_dev_tools_enabled'],
   data() {
     return {
       tabs: [],
       next_tab_id: 100,
       activity_tab_id: null,
-      dialogTableVisible: false
+      dialogTableVisible: false,
+      is_dev_tools_enabled: this.is_dev_tools_enabled
     };
   },
   methods: {
@@ -59,6 +64,10 @@ export default {
           break;
         }
       }
+    },
+    openTabDevTools: function (tab_id) {
+      let webview = document.querySelector('#webview-' + tab_id);
+      webview.openDevTools();
     }
   }
 }
