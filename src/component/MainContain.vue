@@ -11,7 +11,7 @@
         :name="tab.id">
         <span slot="label" class="success">
           {{ tab.name }}
-          <el-button size="mini" icon="el-icon-setting" @click="openTabDevTools(tab.id)" v-if="is_dev_tools_enabled" circle></el-button>
+          <el-button size="mini" icon="el-icon-setting" @click="openTabDevTools(tab.id)" v-if="is_dev_tools_enabled_" circle></el-button>
         </span>
         <webview v-bind:src="tab.uri" v-bind:id="'webview-' + tab.id" style="width:100%;height:89%;border:none;" nodeintegration allowpopups></webview>
       </el-tab-pane>
@@ -31,7 +31,7 @@ export default {
       next_tab_id: 100,
       activity_tab_id: null,
       dialogTableVisible: false,
-      is_dev_tools_enabled: this.is_dev_tools_enabled
+      is_dev_tools_enabled_: this.is_dev_tools_enabled
     };
   },
   methods: {
