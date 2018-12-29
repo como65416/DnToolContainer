@@ -7,101 +7,92 @@ import AdmZip from 'adm-zip';
 import rimraf from 'rimraf';
 
 /**
- * install pakcage by packageInfo
+ * download package to a temp path
  *
- * @param  {Object} packageInfo package information structure : {
- *     host: 'package host',
- *     packageId : 'package id',
- *     downloadUrl : 'package download url',
- *     iconUrl : 'icon url',
- *     options : [
- *         {
- *            name : "package url",
- *            uri : "html file name in zip"
- *         },
- *         ...
- *     ]
- * }
+ * @param  {string} packageFilePath
  */
-function installPackage(packageInfo) {
-  return new Promise(function (resolve, reject) {
-    var tmpPath = RcConfig.getTempDirectoryPath();
-    var tmpZipPath = tmpPath + Buffer.from("dn" + Math.random()).toString('base64') + ".zip";
-    var zipFile = fs.createWriteStream(tmpZipPath);
-    let packageUrl = packageInfo.downloadUrl;
+function downloadPackage(packageUrl) {
+  var tmpPath = RcConfig.getTempDirectoryPath();
+  var tmpSaveFilePath = tmpPath + Buffer.from("dn" + Math.random()).toString('base64') + ".zip";
+  var saveFile = fs.createWriteStream(tmpSaveFilePath);
 
-    // Download Package
+  return new Promise(function(resolve, reject) {
     let httpClient = (packageUrl.indexOf('https://') == 0) ? https : http ;
-    let request = httpClient.get(packageUrl, function(response) {
-      response.pipe(zipFile);
-      zipFile.on('finish', function() {
-        zipFile.close(function () {
-          let installPackagesPath = RcConfig.getPackageInstallPath();
-          let dirName = "pak-" + (new Date().getTime());
-
-          var zip = new AdmZip(tmpZipPath);
-          var zipEntries = zip.getEntries();
-          zip.extractAllTo(installPackagesPath + dirName, true);
-          fs.unlinkSync(tmpZipPath);
-
-          // Download Package icon
-          let iconDirectoryPath = RcConfig.getIconDirectoryPath();
-          let iconUrl = packageInfo.iconUrl;
-          let httpClient = (iconUrl.indexOf('https://') == 0) ? https : http ;
-          var iconFileName = (new Date().getTime()) + ".png"
-          var iconFile = fs.createWriteStream(iconDirectoryPath + iconFileName);
-          httpClient.get(iconUrl, function(response) {
-            response.pipe(iconFile);
-            iconFile.on('finish', function() {
-              iconFile.close(function () {
-                let configPath = installPackagesPath + "packages.json";
-                let installedPackageInfos = (fs.existsSync(configPath)) ? JSON.parse(fs.readFileSync(configPath)): [];
-                let newInfo = Object.assign({}, packageInfo);
-                newInfo.icon = iconFileName;
-                newInfo.directory = dirName;
-                ['iconUrl', 'downloadUrl', 'status'].forEach(e => delete newInfo[e]);
-                installedPackageInfos.push(newInfo);
-                fs.writeFileSync(configPath, JSON.stringify(installedPackageInfos, null, 4));
-                resolve(newInfo);
-              });
-            });
-          });
+      httpClient.get(packageUrl, function(response) {
+      response.pipe(saveFile);
+      saveFile.on('finish', function() {
+        saveFile.close(function () {
+          resolve(tmpSaveFilePath);
         });
       });
     }).on('error', function(err) {
-      fs.unlinkSync(tmpZipPath);
+      fs.unlinkSync(tmpSaveFilePath);
       resolve(err.message);
-    });
+    })
+  });
+}
+
+/**
+ * install pakcage by file path
+ *
+ * @param  {string} packageFilePath
+ */
+function installPackage(packageFilePath) {
+  return new Promise(function (resolve, reject) {
+    let installPackagesPath = RcConfig.getPackageInstallPath();
+    let dirName = "pak-" + (new Date().getTime());
+    let packageDir = installPackagesPath + dirName;
+
+    var zip = new AdmZip(packageFilePath);
+    var zipEntries = zip.getEntries();
+    zip.extractAllTo(packageDir, true);
+    fs.unlinkSync(packageFilePath);
+
+    let manifestPath = packageDir + "/dn-manifest.json";
+    if (!fs.existsSync(manifestPath)) {
+      reject('dn-manifest.json not found');
+    } else {
+      let mainifestContent = JSON.parse(fs.readFileSync(manifestPath));
+      // check icon and options exists
+      if (!fs.existsSync(packageDir + "/" + mainifestContent.iconFile)) {
+        reject('icon not found');
+      }
+      for (let option of mainifestContent.options) {
+        if (!fs.existsSync(packageDir + "/" + option.file)) {
+          reject(option.file + ' not found');
+        }
+      }
+    }
+
+    // update packages.json
+    let configPath = installPackagesPath + "packages.json";
+    let packageDirs = (fs.existsSync(configPath)) ? JSON.parse(fs.readFileSync(configPath)): [];
+    packageDirs.push(dirName);
+    fs.writeFileSync(configPath, JSON.stringify(packageDirs, null, 4));
+    resolve(manifestPath);
   });
 }
 
 /**
  * uninstall a exist package
  *
- * @param  {Object} packageInfo package infomation structure: {
- *     host: 'package host',
- *     packageId: 'package id'
- * }
+ * @param  {Object} packageId package id
  */
-function uninstallPackage(packageInfo) {
+function uninstallPackage(packageId) {
   return new Promise(function (resolve, reject) {
     let installPackagesPath = RcConfig.getPackageInstallPath();
-    let iconDirectoryPath = RcConfig.getIconDirectoryPath();
     let configPath = installPackagesPath + "packages.json";
-
-    let installPackageInfos = JSON.parse(fs.readFileSync(configPath));
-    for (let i in installPackageInfos) {
-      if (installPackageInfos[i].packageId == packageInfo.packageId && installPackageInfos[i].host == packageInfo.host) {
-        fs.unlinkSync(iconDirectoryPath + installPackageInfos[i].icon);
-        rimraf(installPackagesPath + installPackageInfos[i].directory, function () {
-          installPackageInfos.splice(i, 1);
-          fs.writeFileSync(configPath, JSON.stringify(installPackageInfos, null, 4));
-          resolve();
-        });
-        return;
+    let packageDirs = JSON.parse(fs.readFileSync(configPath));
+    for (let i in packageDirs) {
+      let manifestContent = JSON.parse(fs.readFileSync(installPackagesPath + "/" + packageDirs[i] + "/dn-manifest.json"));
+      if (manifestContent.packageId == packageId) {
+        let path = packageDirs[i];
+        packageDirs.splice(i, 1);
+        fs.writeFileSync(configPath, JSON.stringify(packageDirs, null, 4));
+        rimraf(path, function () {});
+        resolve();
       }
     }
-    reject("Package Not Found");
   });
 }
 
@@ -109,18 +100,15 @@ function uninstallPackage(packageInfo) {
  * get all packages info from all package store
  *
  * @return {Object} structure : [
- *    packageId: 'package id',
- *    packageName: 'package name',
- *    iconUrl: 'package icon url',
- *    description: 'package description',
- *    downloadUrl: 'package download url(zip file)',
- *    options: [
- *        {
- *            name: 'option name',
- *            uri: 'html file path in zip'
- *        },
- *        ...
- *    ]
+ *    {
+ *      packageId: 'package id',
+ *      version: 'version',
+ *      packageName: 'package name',
+ *      iconUrl: 'package icon url',
+ *      description: 'package description',
+ *      downloadUrl: 'package download url(zip file)'
+ *    },
+ *    ...
  * ]
  */
 async function getAllStorePackages() {
@@ -143,16 +131,15 @@ async function getAllStorePackages() {
  * get all installed package information
  * @return {Object} structure : [
  *     {
- *         "host": "package host",
  *         "packageId": "package id",
  *         "packageName": "package name",
  *         "directory": "package save dirname",
- *         "icon": "icon image file name",
+ *         "iconUri": "icon image file uri",
  *         "description": "package description",
  *         "options": [
  *             {
  *                 name: 'option name',
- *                 uri: 'html file path in zip'
+ *                 fileUri: 'html file uri'
  *             },
  *             ...
  *         ]
@@ -166,11 +153,21 @@ function getInstalledPackages() {
   if (!fs.existsSync(configPath)) {
     fs.writeFileSync(configPath, '[]');
   }
-  let installPackageInfos = JSON.parse(fs.readFileSync(configPath));
+  let packageDirs = JSON.parse(fs.readFileSync(configPath));
+  let installPackageInfos = [];
+  for (let packageDir of packageDirs) {
+    let content = JSON.parse(fs.readFileSync(installPackagesPath + packageDir + "/dn-manifest.json"));
+    content.iconUri = "file://" + installPackagesPath + packageDir + "/" + content.iconFile;
+    for (let option of content.options) {
+      option.fileUri = "file://" + installPackagesPath + packageDir + "/" + option.file;
+    }
+    installPackageInfos.push(content);
+  }
   return installPackageInfos;
 }
 
 export default {
+  downloadPackage,
   installPackage,
   uninstallPackage,
   getAllStorePackages,
