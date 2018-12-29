@@ -18,7 +18,7 @@
         v-show="packageInfo.visable"
         :key="packageInfo.id">
         <template slot="title">
-          <img v-bind:src="'file://' + icon_directory_path + packageInfo.icon" style="height:25px;" />
+          <img v-bind:src="packageInfo.iconUri" style="height:25px;" />
           <span slot="title">{{ packageInfo.packageName }}</span>
         </template>
         <el-menu-item
@@ -54,7 +54,6 @@ export default {
     return {
       packageInfos: packageInfos,
       search_keyword: '',
-      icon_directory_path: RcConfig.getIconDirectoryPath(),
       package_install_path: RcConfig.getPackageInstallPath()
     };
   },
@@ -62,7 +61,7 @@ export default {
     clickOption: function (packageInfo, option_index) {
       let info = {
         name: packageInfo.options[option_index].name,
-        uri: "file://" + this.package_install_path + packageInfo.directory + "/" + packageInfo.options[option_index].uri,
+        uri: packageInfo.options[option_index].fileUri,
         id: packageInfo.packageId + "-" + option_index
       }
       this.$emit('option-clicked', info);
