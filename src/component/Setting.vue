@@ -1,6 +1,6 @@
 <template>
   <el-tabs v-model="activeName">
-    <el-tab-pane label="Install Package" name="install_package">
+    <el-tab-pane label="Packages Store" name="packages_store">
       <el-table
         :data="packageInfos"
         height="450"
@@ -59,7 +59,7 @@ export default {
   props: ['is_dev_tools_enabled'],
   data() {
     return {
-      activeName: 'install_package',
+      activeName: 'packages_store',
       packageInfos: [],
       is_dev_tools_enabled_: this.is_dev_tools_enabled
     };
@@ -71,18 +71,15 @@ export default {
     reloadPackageMenu: function () {
       PackageUtil.getAllStorePackages().then(storePackages => {
         let installedPackages = PackageUtil.getInstalledPackages();
-        let iconDirPath = RcConfig.getIconDirectoryPath();
         for (let installedPackage of installedPackages) {
           installedPackage.status = 'installed';
           installedPackage.downloadUrl = null;
-          installedPackage.iconUrl = 'file://' + iconDirPath + installedPackage.icon;
         }
         let menu = installedPackages;
-
         for (let storePackage of storePackages) {
           let isInstelled = false;
           for (let option of menu) {
-            if (option.host == storePackage.host && option.packageId == storePackage.packageId) {
+            if (option.packageId == storePackage.packageId) {
               option.downloadUrl = storePackage.downloadUrl;
               option.iconUrl = storePackage.iconUrl;
               isInstelled = true;
@@ -97,23 +94,24 @@ export default {
         this.packageInfos = menu;
       });
     },
-    installPackage(option) {
+    installPackage: function(option) {
       let self = this;
       for (let i in this.packageInfos) {
-        if (this.packageInfos[i].host == option.host && this.packageInfos[i].packageId == option.packageId) {
+        if (this.packageInfos[i].packageId == option.packageId) {
           let packageInfo = this.packageInfos[i];
           packageInfo.status = 'installing';
-          PackageUtil.installPackage(packageInfo).then(function (res) {
+          PackageUtil.downloadPackage(packageInfo.downloadUrl)
+          .then(function (package_path) {
+            return PackageUtil.installPackage(package_path);
+          }).then(function (info) {
             packageInfo.status = 'installed';
-            packageInfo.path = res.path;
-            packageInfo.icon = res.icon;
             self.$notify({
               title: 'Success',
               message: 'Install "' + packageInfo.packageName + '" Success',
               type: 'success'
             });
             self.$emit('packages-changed');
-          }).catch(function (err) {
+          }).catch(function (error) {
             packageInfo.status = 'not install';
             self.$notify.error({
               title: 'Error',
@@ -131,7 +129,7 @@ export default {
           if (this.packageInfos[i].host == option.host && this.packageInfos[i].packageId == option.packageId) {
             let packageInfo = this.packageInfos[i];
             packageInfo.status = 'uninstalling';
-            PackageUtil.uninstallPackage(packageInfo).then(() => {
+            PackageUtil.uninstallPackage(packageInfo.packageId).then(() => {
               if (option.downloadUrl != null) {
                 packageInfo.status = 'not install';
               } else {
@@ -143,7 +141,7 @@ export default {
                 type: 'success'
               });
               self.$emit('packages-changed');
-            }).catch((e) => function () {
+            }).catch((e) => {
               packageInfo.status = 'installed';
               self.$notify.error({
                 title: 'Error',
