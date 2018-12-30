@@ -8,8 +8,11 @@ import Vuex from 'vuex';
 Vue.use(ElementUI);
 Vue.use(Vuex);
 
+let store = Store.createStore();
+store.commit('reloadInstalledPackages');
+
 new Vue({
   el: '#app',
-  store: Store.createStore(),
+  store: store,
   render: h => h(App)
 });
