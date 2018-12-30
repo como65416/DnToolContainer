@@ -2,7 +2,6 @@
   <div>
     <el-container style="height:100%;">
       <sidebar
-        v-bind:sidebar_config="menu_configs"
         v-on:option-clicked="optionClicked"
         v-show="sidebarVisible">
       </sidebar>
@@ -16,7 +15,7 @@
     </el-container>
 
     <el-dialog title="Preferences" width="900px" height="700px" top="40px" :visible.sync="dialogTableVisible">
-      <setting v-on:packages-changed="reloadPackages"></setting>
+      <setting></setting>
     </el-dialog>
   </div>
 </template>
@@ -26,16 +25,13 @@
 
 <script>
 import ConfigManager from './lib/ConfigManager';
+import Setting from './component/Setting.vue';
 import Sidebar from './component/Sidebar.vue';
 import MainContain from './component/MainContain.vue';
-import Setting from './component/Setting.vue';
-
-let configs = ConfigManager.getSidebarMenuConfig();
 
 export default {
   data() {
     return {
-      menu_configs: configs,
       dialogTableVisible: false,
       sidebarVisible: true
     };
@@ -43,9 +39,6 @@ export default {
   methods: {
     optionClicked: function (info) {
       this.$refs.main.addTab(info);
-    },
-    reloadPackages: function () {
-      this.menu_configs = ConfigManager.getSidebarMenuConfig();
     }
   },
   components: {
