@@ -13,8 +13,8 @@
         <i slot="prefix" class="el-input__icon el-icon-search"></i>
       </el-input>
       <el-submenu
-        v-for="(packageInfo, index) in packageInfos"
-        v-bind:index="packageInfo.id"
+        v-for="packageInfo in menuList"
+        v-bind:index="packageInfo.packageId"
         v-show="packageInfo.visable"
         :key="packageInfo.id">
         <template slot="title">
@@ -22,9 +22,9 @@
           <span slot="title">{{ packageInfo.packageName }}</span>
         </template>
         <el-menu-item
-          v-for="(option, index2) in packageInfo.options"
-          v-bind:index="option.id"
-          v-on:click="clickOption(packageInfo, index2)"
+          v-for="(option, index) in packageInfo.options"
+          v-bind:index="option.fileUri"
+          v-on:click="clickOption(packageInfo, index)"
           v-show="option.visable"
           :key="option.id">
           {{ option.name }}
@@ -41,34 +41,27 @@
 import RcConfig from '../lib/RcConfig';
 
 export default {
-  props: ['sidebar_config'],
   data() {
-    let packageInfos = this.sidebar_config;
-    for (let packageInfo of packageInfos) {
-      packageInfo.visable = true;
-      for (let option of packageInfo.options) {
-        option.visable = true;
-      }
-    }
-
     return {
-      packageInfos: packageInfos,
       search_keyword: ''
     };
   },
   methods: {
-    clickOption: function (packageInfo, option_index) {
+    clickOption: function (packageInfo, index) {
       let info = {
-        name: packageInfo.options[option_index].name,
-        uri: packageInfo.options[option_index].fileUri,
-        id: packageInfo.packageId + "-" + option_index
+        name: packageInfo.options[index].name,
+        uri: packageInfo.options[index].fileUri,
+        id: packageInfo.packageId + "-" + index
       }
       this.$emit('option-clicked', info);
     }
   },
   watch: {
-    search_keyword: function () {
-      for (let packageInfo of this.packageInfos) {
+  },
+  computed: {
+    menuList: function () {
+      let packageInfos = this.$store.state.installedPackages;
+      for (let packageInfo of packageInfos) {
         let is_match = false;
         for (let option of packageInfo.options) {
           if (this.search_keyword == '' || option.name.toLowerCase().indexOf(this.search_keyword.toLowerCase()) != -1) {
@@ -80,16 +73,7 @@ export default {
         }
         packageInfo.visable = is_match;
       }
-    },
-    sidebar_config: function () {
-      let packageInfos = this.sidebar_config;
-      for (let packageInfo of packageInfos) {
-        packageInfo.visable = true;
-        for (let option of packageInfo.options) {
-          option.visable = true;
-        }
-      }
-      this.packageInfos = packageInfos;
+      return packageInfos;
     }
   }
 }
