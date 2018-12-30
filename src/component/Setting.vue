@@ -40,7 +40,7 @@
     <el-tab-pane label="Setting" name="setting">
       Enable Tab Dev Tools:
       <el-switch
-        v-model="is_dev_tools_enabled_"
+        v-model="isDevToolsEnabled"
         active-text=""
         inactive-text="">
       </el-switch>
@@ -56,12 +56,10 @@ import PackageUtil from '../lib/PackageUtil';
 import RcConfig from '../lib/RcConfig';
 
 export default {
-  props: ['is_dev_tools_enabled'],
   data() {
     return {
       activeName: 'packages_store',
-      packageInfos: [],
-      is_dev_tools_enabled_: this.is_dev_tools_enabled
+      packageInfos: []
     };
   },
   created: function () {
@@ -154,9 +152,14 @@ export default {
       }
     }
   },
-  watch:{
-    is_dev_tools_enabled_: function(val) {
-      this.$emit('update:is_dev_tools_enabled', val);
+  computed: {
+    isDevToolsEnabled: {
+      get() {
+        return this.$store.state.isDevToolsEnabled;
+      },
+      set(val) {
+        this.$store.commit('changeDevToolsEnableStatus', val)
+      }
     }
   }
 }
