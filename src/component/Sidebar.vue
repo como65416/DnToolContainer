@@ -44,17 +44,16 @@ export default {
   props: ['sidebar_config'],
   data() {
     let packageInfos = this.sidebar_config;
-    for (let i in packageInfos) {
-      packageInfos[i].visable = true;
-      for (let j in packageInfos[i].options) {
-        packageInfos[i].options[j].visable = true;
+    for (let packageInfo of packageInfos) {
+      packageInfo.visable = true;
+      for (let option of packageInfo.options) {
+        option.visable = true;
       }
     }
 
     return {
       packageInfos: packageInfos,
-      search_keyword: '',
-      package_install_path: RcConfig.getPackageInstallPath()
+      search_keyword: ''
     };
   },
   methods: {
@@ -69,25 +68,25 @@ export default {
   },
   watch: {
     search_keyword: function () {
-      for (let i in this.packageInfos) {
+      for (let packageInfo of this.packageInfos) {
         let is_match = false;
-        for (let j in this.packageInfos[i].options) {
-          if (this.search_keyword == '' || this.packageInfos[i].options[j].name.toLowerCase().indexOf(this.search_keyword.toLowerCase()) != -1) {
-            this.packageInfos[i].options[j].visable = true;
+        for (let option of packageInfo.options) {
+          if (this.search_keyword == '' || option.name.toLowerCase().indexOf(this.search_keyword.toLowerCase()) != -1) {
+            option.visable = true;
             is_match = true;
           } else {
-            this.packageInfos[i].options[j].visable = false;
+            option.visable = false;
           }
         }
-        this.packageInfos[i].visable = is_match;
+        packageInfo.visable = is_match;
       }
     },
     sidebar_config: function () {
       let packageInfos = this.sidebar_config;
-      for (let i in packageInfos) {
-        packageInfos[i].visable = true;
-        for (let j in packageInfos[i].options) {
-          packageInfos[i].options[j].visable = true;
+      for (let packageInfo of packageInfos) {
+        packageInfo.visable = true;
+        for (let option of packageInfo.options) {
+          option.visable = true;
         }
       }
       this.packageInfos = packageInfos;
