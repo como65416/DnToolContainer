@@ -63,7 +63,7 @@ function getTempDirectoryPath() {
 function getPackageStoreUrls() {
   // TODO: use file to config urls
   return [
-    'https://como65416.github.io/DnToolContainer-packages/packages/list.json'
+    'https://como65416.github.io/DnToolContainer-packages/packages/list.v2.json'
   ];
 }
 

@@ -24,11 +24,9 @@ import PackageUtil from './PackageUtil';
  */
 function getSidebarMenuConfig() {
   let installPackages = PackageUtil.getInstalledPackages();
-  for (let i in installPackages) {
-    installPackages[i].id = installPackages[i].packageFrom + "-" + installPackages[i].packageId;
-    for (let j in installPackages[i].options) {
-      installPackages[i].options[j].id = installPackages[i].id + "-" + j;
-    }
+  for (let installPackage of installPackages) {
+    installPackage.id = installPackage.packageFrom + "-" + installPackage.packageId;
+    installPackage.options.map((option, index) => Object.assign(option, {id: installPackage.id + "-" + index}));
   }
   return installPackages;
 }

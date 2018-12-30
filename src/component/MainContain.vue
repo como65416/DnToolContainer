@@ -11,7 +11,7 @@
         :name="tab.id">
         <span slot="label" class="success">
           {{ tab.name }}
-          <el-button size="mini" icon="el-icon-setting" @click="openTabDevTools(tab.id)" v-if="is_dev_tools_enabled" circle></el-button>
+          <el-button size="mini" icon="el-icon-setting" @click="openTabDevTools(tab.id)" v-if="isDevToolsEnabled" circle></el-button>
         </span>
         <webview v-bind:src="tab.uri" v-bind:id="'webview-' + tab.id" style="width:100%;height:89%;border:none;" nodeintegration allowpopups></webview>
       </el-tab-pane>
@@ -24,24 +24,22 @@
 
 <script>
 export default {
-  props: ['is_dev_tools_enabled'],
   data() {
     return {
       tabs: [],
       next_tab_id: 100,
       activity_tab_id: null,
-      dialogTableVisible: false,
-      is_dev_tools_enabled: this.is_dev_tools_enabled
+      dialogTableVisible: false
     };
   },
   methods: {
     addTab: function (option) {
-      for (let i in this.tabs) {
-        if (this.tabs[i].option_id == option.id) {
-          this.activity_tab_id = this.tabs[i].id
-          return;
-        }
+      let targetTab = this.tabs.find(tab => tab.option_id == option.id);
+      if (targetTab != null) {
+        this.activity_tab_id = targetTab.id;
+        return;
       }
+
       let new_tab = {
         id: 'tab' + this.next_tab_id,
         name: option.name,
@@ -68,6 +66,11 @@ export default {
     openTabDevTools: function (tab_id) {
       let webview = document.querySelector('#webview-' + tab_id);
       webview.openDevTools();
+    }
+  },
+  computed: {
+    isDevToolsEnabled: function() {
+      return this.$store.state.isDevToolsEnabled;
     }
   }
 }
