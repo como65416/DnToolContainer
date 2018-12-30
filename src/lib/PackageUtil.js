@@ -9,7 +9,7 @@ import rimraf from 'rimraf';
 /**
  * download package to a temp path
  *
- * @param  {string} packageFilePath
+ * @param  {string} packageUrl
  */
 function downloadPackage(packageUrl) {
   var tmpPath = RcConfig.getTempDirectoryPath();
@@ -114,15 +114,10 @@ function uninstallPackage(packageId) {
 async function getAllStorePackages() {
   let storeUrls = RcConfig.getPackageStoreUrls();
   let packages = [];
+  let config = {headers: {'Content-Type': 'application/json','Cache-Control' : 'no-cache'}};
   for (let storeUrl of storeUrls) {
-    let config = {headers: {'Content-Type': 'application/json','Cache-Control' : 'no-cache'}};
     let response = await axios.get(storeUrl, config);
-    let matches = storeUrl.match(/^http[s]{0,1}:\/\/([^\/]+)/);
-    let host = matches[1];
-    for (let pack of response.data) {
-      pack.host = host;
-      packages.push(pack);
-    }
+    packages = packages.concat(response.data);
   }
   return packages;
 }
@@ -158,9 +153,7 @@ function getInstalledPackages() {
   for (let packageDir of packageDirs) {
     let content = JSON.parse(fs.readFileSync(installPackagesPath + packageDir + "/dn-manifest.json"));
     content.iconUri = "file://" + installPackagesPath + packageDir + "/" + content.iconFile;
-    for (let option of content.options) {
-      option.fileUri = "file://" + installPackagesPath + packageDir + "/" + option.file;
-    }
+    content.options.map(option => Object.assign(option, {fileUri: "file://" + installPackagesPath + packageDir + "/" + option.file}));
     installPackageInfos.push(content);
   }
   return installPackageInfos;

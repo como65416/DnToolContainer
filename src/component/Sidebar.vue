@@ -62,16 +62,10 @@ export default {
     menuList: function () {
       let packageInfos = this.$store.state.installedPackages;
       for (let packageInfo of packageInfos) {
-        let is_match = false;
         for (let option of packageInfo.options) {
-          if (this.search_keyword == '' || option.name.toLowerCase().indexOf(this.search_keyword.toLowerCase()) != -1) {
-            option.visable = true;
-            is_match = true;
-          } else {
-            option.visable = false;
-          }
+          option.visable = (this.search_keyword == '' || option.name.toLowerCase().indexOf(this.search_keyword.toLowerCase()) != -1);
         }
-        packageInfo.visable = is_match;
+        packageInfo.visable = packageInfo.options.some(option => option.visable == true);
       }
       return packageInfos;
     }

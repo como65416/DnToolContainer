@@ -34,12 +34,12 @@ export default {
   },
   methods: {
     addTab: function (option) {
-      for (let i in this.tabs) {
-        if (this.tabs[i].option_id == option.id) {
-          this.activity_tab_id = this.tabs[i].id
-          return;
-        }
+      let targetTab = this.tabs.find(tab => tab.option_id == option.id);
+      if (targetTab != null) {
+        this.activity_tab_id = targetTab.id;
+        return;
       }
+
       let new_tab = {
         id: 'tab' + this.next_tab_id,
         name: option.name,
