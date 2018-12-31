@@ -4,7 +4,7 @@
     <el-tab-pane label="Packages Store" name="packages_store">
       <el-table
         :data="packageStoreList"
-        height="450"
+        height="360"
         style="width: 100%">
         <el-table-column
           label="Icon"
@@ -41,7 +41,7 @@
     <el-tab-pane label="Installed Package" name="installed_packages">
       <el-table
         :data="installedPackageList"
-        height="450"
+        height="360"
         style="width: 100%">
         <el-table-column
           label="Icon"
@@ -72,6 +72,9 @@
           </template>
         </el-table-column>
       </el-table>
+      <p>
+        <el-button type="primary" size="small" @click="installCustomPacakage()"><i class="el-icon-plus"></i> Install Custom Package</el-button>
+      </p>
     </el-tab-pane>
 
     <!-- setting -->
@@ -92,6 +95,8 @@
 <script>
 import PackageUtil from '../lib/PackageUtil';
 import RcConfig from '../lib/RcConfig';
+import { remote as electron } from 'electron';
+import fs from 'fs';
 
 export default {
   data() {
@@ -116,7 +121,12 @@ export default {
 
       this.installingPackageIds.push(packageId);
       PackageUtil.downloadPackage(targetInfo.downloadUrl)
-        .then(package_path => PackageUtil.installPackage(package_path))
+        .then(packagePath => {
+          PackageUtil.installPackage(packagePath)
+            .finally(() => {
+              fs.unlinkSync(packagePath);
+            });
+        })
         .then(info => {
           this.$notify({
             title: 'Success',
@@ -129,10 +139,31 @@ export default {
         .catch(error => {
           this.$notify.error({
             title: 'Error',
-            message: 'Install "' + targetInfo.packageName + '" Fail',
+            message: 'Install "' + targetInfo.packageName + '" Fail : ' + error,
           });
           this.installingPackageIds.splice(this.installingPackageIds.indexOf(packageId), 1);
         });
+    },
+    installCustomPacakage() {
+      let selectedFiles = electron.dialog.showOpenDialog({ properties: ['openFile'] });
+      if (selectedFiles != null) {
+        let packagePath = selectedFiles[0];
+        PackageUtil.installPackage(packagePath)
+          .then(info => {
+            this.$notify({
+              title: 'Success',
+              message: 'Install Success',
+              type: 'success'
+            });
+            this.$store.commit('reloadInstalledPackages');
+          })
+          .catch(err => {
+            this.$notify.error({
+              title: 'Error',
+              message: 'Install Fail : ' + err,
+            });
+          });
+      }
     },
     uninstallPackage(packageId) {
       let installedPackageInfos = this.$store.state.installedPackages;
