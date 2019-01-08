@@ -44,9 +44,9 @@ It can get more and more convenience tool in the future and no need reinstall Ap
 ![](resource/img004.png)
 
 
-### Install tool from custom package
+### Install tools from custom package
 
-your can package your custom by [DN Tool Packageer](https://github.com/como65416/dn-tool-packager)
+your can package your tools by [DN Tool Packageer](https://github.com/como65416/dn-tool-packager)
 
 * Open the Applcation and click ![icon](resource/icon01.png) button
 
