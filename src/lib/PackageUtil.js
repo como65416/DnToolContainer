@@ -46,20 +46,35 @@ function installPackage(packageFilePath) {
     var zip = new AdmZip(packageFilePath);
     var zipEntries = zip.getEntries();
     zip.extractAllTo(packageDir, true);
-    fs.unlinkSync(packageFilePath);
 
     let manifestPath = packageDir + "/dn-manifest.json";
     if (!fs.existsSync(manifestPath)) {
       reject('dn-manifest.json not found');
+      rimraf(packageDir, function () {});
+      return;
     } else {
       let mainifestContent = JSON.parse(fs.readFileSync(manifestPath));
-      // check icon and options exists
+      let keyNotExists = ['packageId', 'version', 'packageName', 'iconFile', 'description', 'options'].filter(x => !Object.keys(mainifestContent).includes(x));
+      // check dn-manifest.json
+      if (keyNotExists.length != 0) {
+        reject("dn-manifest.json " + keyNotExists.join(",") + " not write");
+        return;
+      }
+      // check is installed or not
+      if (getInstalledPackages().find(pacakgeInfo => pacakgeInfo.packageId == mainifestContent.packageId) != null) {
+        reject("this package already installed");
+        return;
+      }
+      // check icon and options file exists or not
       if (!fs.existsSync(packageDir + "/" + mainifestContent.iconFile)) {
         reject('icon not found');
+        return;
       }
       for (let option of mainifestContent.options) {
         if (!fs.existsSync(packageDir + "/" + option.file)) {
           reject(option.file + ' not found');
+          rimraf(packageDir, function () {});
+          return;
         }
       }
     }

@@ -27,7 +27,7 @@ It can get more and more convenience tool in the future and no need reinstall Ap
 
 ## Usage
 
-### Install tool
+### Install tool from store
 
 * Open the Applcation and click ![icon](resource/icon01.png) button
 
@@ -42,3 +42,20 @@ It can get more and more convenience tool in the future and no need reinstall Ap
 * Enjoy it !
 
 ![](resource/img004.png)
+
+
+### Install tool from custom package
+
+your can package your custom by [DN Tool Packageer](https://github.com/como65416/dn-tool-packager)
+
+* Open the Applcation and click ![icon](resource/icon01.png) button
+
+![](resource/img001.png)
+
+* Click `Install Custom Package` button in `Installed Package` page and select your package.
+
+![](resource/img005.png)
+
+* Enjoy it !
+
+![](resource/img006.png)
