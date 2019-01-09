@@ -46,16 +46,16 @@ It can get more and more convenience tool in the future and no need reinstall Ap
 
 ### Install tools from custom package
 
-your can package your tools by [DN Tool Packageer](https://github.com/como65416/dn-tool-packager)
+You can package your tools by [DN Tool Packager](https://github.com/como65416/dn-tool-packager)
 
 * Open the Applcation and click ![icon](resource/icon01.png) button
 
 ![](resource/img001.png)
 
-* Click `Install Custom Package` button in `Installed Package` page and select your package.
+* Click `Install Custom Package` button in `Installed Package` page and select the package which you want to install.
 
 ![](resource/img005.png)
 
-* Enjoy it !
+* Installed !
 
 ![](resource/img006.png)
