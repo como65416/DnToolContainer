@@ -7,6 +7,11 @@ function createWindow() {
   let windowConfig = {
     width: 1280,
     height: 720,
+    webPreferences: {
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true,
+      webviewTag: true
+    },
     icon: __dirname + '/icon.png'
   };
 
@@ -32,9 +37,7 @@ function createWindow() {
 
   if (process.argv.includes('--dev')) {
     indexPageURL = `http://localhost:8089/index.html`;
-    windowConfig.webPreferences = {
-      webSecurity: false
-    }
+    windowConfig.webPreferences.webSecurity = false,
     menuTemplate.push({
       label: 'Development',
       submenu: [
