@@ -20,7 +20,7 @@
     "babel-loader": "^8.0.4",
     "css-loader": "^3.1.0",
     "electron": "^6.0.3",
-    "electron-packager": "^13.0.0",
+    "electron-packager": "^14.0.4",
     "file-loader": "^1.1.11",
     "mini-css-extract-plugin": "^0.4.4",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
