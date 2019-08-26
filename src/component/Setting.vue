@@ -2,33 +2,23 @@
   <el-tabs v-model="activeName">
     <!-- Package Store -->
     <el-tab-pane label="Packages Store" name="packages_store">
-      <el-table
-        :data="packageStoreList"
-        height="360"
-        style="width: 100%">
-        <el-table-column
-          label="Icon"
-          width="60">
+      <el-table :data="packageStoreList" height="360" style="width: 100%">
+        <el-table-column label="Icon" width="60">
           <template slot-scope="scope">
             <img v-bind:src="scope.row.iconUrl" style="width:36px;height:36px;"></img>
           </template>
         </el-table-column>
-        <el-table-column
-          label="Name"
-          width="240">
+        <el-table-column label="Name" width="240">
           <template slot-scope="scope">
             <span>{{ scope.row.packageName }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="Description">
+        <el-table-column label="Description">
           <template slot-scope="scope">
             {{ scope.row.description }}
           </template>
         </el-table-column>
-        <el-table-column
-          label=""
-          width="140">
+        <el-table-column width="140">
           <template slot-scope="scope">
             <el-button type="success" size="mini" style="width:120px;" icon="el-icon-plus" v-show="scope.row.status == 'not install'" @click="installPackage(scope.row.packageId)">Install</el-button>
             <el-button type="warning" size="mini" style="width:120px;margin-left: 0px;" icon="el-icon-loading" v-show="scope.row.status == 'installing'" disabled>Installing</el-button>
@@ -39,77 +29,54 @@
 
     <!-- installed packages -->
     <el-tab-pane label="Installed Package" name="installed_packages">
-      <el-table
-        :data="installedPackageList"
-        height="360"
-        style="width: 100%">
-        <el-table-column
-          label="Icon"
-          width="60">
+      <el-table :data="installedPackageList" height="360" style="width: 100%">
+        <el-table-column label="Icon" width="60">
           <template slot-scope="scope">
             <img v-bind:src="scope.row.iconUri" style="width:36px;height:36px;"></img>
           </template>
         </el-table-column>
-        <el-table-column
-          label="Name"
-          width="240">
+        <el-table-column label="Name" width="240">
           <template slot-scope="scope">
             {{ scope.row.packageName }}
           </template>
         </el-table-column>
-        <el-table-column
-          label="Description">
+        <el-table-column label="Description">
           <template slot-scope="scope">
             {{ scope.row.description }}
           </template>
         </el-table-column>
-        <el-table-column
-          label=""
-          width="140">
+        <el-table-column width="140">
           <template slot-scope="scope">
             <el-button type="danger" size="mini" style="width:120px;margin-left: 0px;" icon="el-icon-delete" v-show="scope.row.status == 'installed'" @click="uninstallPackage(scope.row.packageId)">Uninstall</el-button>
             <el-button type="warning" size="mini" style="width:120px;margin-left: 0px;" icon="el-icon-loading" v-show="scope.row.status == 'uninstalling'" disabled>Uninstalling</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <p>
-        <el-button type="primary" size="small" @click="installCustomPacakage()"><i class="el-icon-plus"></i> Install Custom Package</el-button>
-      </p>
+      <br />
+      <el-button type="primary" size="small" @click="installCustomPacakage()"><i class="el-icon-plus"></i> Install Custom Package</el-button>
     </el-tab-pane>
 
     <!-- manage store -->
     <el-tab-pane label="Manage Store" name="manage_store">
-      <el-table
-        :data="storeDatas"
-        style="width: 100%"
-        max-height="250">
-        <el-table-column
-          width="70"
-          label="Icon">
+      <el-table :data="storeDatas" style="width: 100%" max-height="250">
+        <el-table-column width="70" label="Icon">
           <template slot-scope="scope">
-            <img
-              style="max-width:40px;max-height:40px;"
-              :src="scope.row.iconUrl" />
+            <img style="max-width:40px;max-height:40px;" :src="scope.row.iconUrl" />
           </template>
         </el-table-column>
-        <el-table-column
-          width="70"
-          label="Status">
+        <el-table-column width="70" label="Status">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.isAlive === true" type="success" size="small" effect="plain" icon="el-icon-search">Alive</el-tag>
             <el-tag v-else-if="scope.row.isAlive === false" type="danger" size="small" effect="plain" icon="el-icon-search">Error</el-tag>
           </template>
         </el-table-column>
-        <el-table-column
-          width="160"
-          label="Store Name">
+        <el-table-column width="160" label="Store Name">
           <template slot-scope="scope">
             <el-input v-if="scope.row.isEditing" v-model="scope.row.name"></el-input>
             <span v-else>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="API">
+        <el-table-column label="API">
           <template slot-scope="scope">
             <el-input v-if="scope.row.isEditing" v-model="scope.row.apiUrl"></el-input>
             <span v-else>{{ scope.row.apiUrl.substring(0, 22) }}...</span>
@@ -150,12 +117,8 @@
     <!-- setting -->
     <el-tab-pane label="Setting" name="setting">
       <h3>
-        Enable Tab Dev Tools:
-        <el-switch
-          v-model="isDevToolsEnabled"
-          active-text=""
-          inactive-text="">
-        </el-switch>
+        Enable Tab Dev Tools :
+        <el-switch v-model="isDevToolsEnabled"></el-switch>
       </h3>
     </el-tab-pane>
   </el-tabs>
