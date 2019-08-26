@@ -186,6 +186,20 @@ export default {
     this.reloadStoreInfos();
   },
   methods: {
+    notifyMessage: function (type, message) {
+      if (type == 'error') {
+        this.$notify.error({
+          title: 'Error',
+          message: message,
+        });
+      } else if (type == 'success') {
+        this.$notify({
+          title: 'Success',
+          message: message,
+          type: 'success'
+        });
+      }
+    },
     reloadStorePackageInfos: async function () {
       PackageStoreUtil.getAllStorePackages().then(storePackages => {
         this.storePackageInfos = storePackages;
@@ -218,10 +232,7 @@ export default {
         this.reloadStorePackageInfos();
         this.storeDatas[index].isEditing = false;
       } catch (error) {
-        this.$notify.error({
-          title: 'Error',
-          message: error,
-        });
+        this.notifyMessage('error', error);
       }
     },
     editStore: function (index) {
@@ -249,19 +260,12 @@ export default {
             });
         })
         .then(info => {
-          this.$notify({
-            title: 'Success',
-            message: 'Install "' + targetInfo.packageName + '" Success',
-            type: 'success'
-          });
+          this.notifyMessage('success', 'Install "' + targetInfo.packageName + '" Success');
           this.$store.commit('reloadInstalledPackages');
           this.installingPackageIds.splice(this.installingPackageIds.indexOf(packageId), 1);
         })
         .catch(error => {
-          this.$notify.error({
-            title: 'Error',
-            message: 'Install "' + targetInfo.packageName + '" Fail : ' + error,
-          });
+          this.notifyMessage('error', 'Install "' + targetInfo.packageName + '" Fail : ' + error,);
           this.installingPackageIds.splice(this.installingPackageIds.indexOf(packageId), 1);
         });
     },
@@ -271,18 +275,11 @@ export default {
         let packagePath = selectedFiles[0];
         PackageUtil.installPackage(packagePath)
           .then(info => {
-            this.$notify({
-              title: 'Success',
-              message: 'Install Success',
-              type: 'success'
-            });
+            this.notifyMessage('success', 'Install Success');
             this.$store.commit('reloadInstalledPackages');
           })
           .catch(err => {
-            this.$notify.error({
-              title: 'Error',
-              message: 'Install Fail : ' + err,
-            });
+            this.notifyMessage('error', 'Install Fail : ' + err);
           });
       }
     },
@@ -294,18 +291,11 @@ export default {
         this.uninstallingPackageIds.push(packageId);
         PackageUtil.uninstallPackage(packageId)
           .then(() => {
-            this.$notify({
-              title: 'Success',
-              message: 'Uninstall "' + targetInfo.packageName + '" Success',
-              type: 'success'
-            });
+            this.notifyMessage('success', 'Uninstall "' + targetInfo.packageName + '" Success');
             this.uninstallingPackageIds.splice(this.uninstallingPackageIds.indexOf(packageId), 1);
             this.$store.commit('reloadInstalledPackages');
           }).catch(err => {
-            this.$notify.error({
-              title: 'Error',
-              message: 'Uninstall "' + targetInfo.packageName + '" Fail',
-            });
+            this.notifyMessage('error', 'Uninstall "' + targetInfo.packageName + '" Fail');
             this.uninstallingPackageIds.splice(this.uninstallingPackageIds.indexOf(packageId), 1);
           });
       }
