@@ -17,7 +17,7 @@
           label="Name"
           width="240">
           <template slot-scope="scope">
-            {{ scope.row.packageName }}
+            <span>{{ scope.row.packageName }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -77,14 +77,86 @@
       </p>
     </el-tab-pane>
 
+    <!-- manage store -->
+    <el-tab-pane label="Manage Store" name="manage_store">
+      <el-table
+        :data="storeDatas"
+        style="width: 100%"
+        max-height="250">
+        <el-table-column
+          width="70"
+          label="Icon">
+          <template slot-scope="scope">
+            <img
+              style="max-width:40px;max-height:40px;"
+              :src="scope.row.iconUrl" />
+          </template>
+        </el-table-column>
+        <el-table-column
+          width="70"
+          label="Status">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.isAlive === true" type="success" size="small" effect="plain" icon="el-icon-search">Alive</el-tag>
+            <el-tag v-else-if="scope.row.isAlive === false" type="danger" size="small" effect="plain" icon="el-icon-search">Error</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          width="160"
+          label="Store Name">
+          <template slot-scope="scope">
+            <el-input v-if="scope.row.isEditing" v-model="scope.row.name"></el-input>
+            <span v-else>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="API">
+          <template slot-scope="scope">
+            <el-input v-if="scope.row.isEditing" v-model="scope.row.apiUrl"></el-input>
+            <span v-else>{{ scope.row.apiUrl.substring(0, 22) }}...</span>
+          </template>
+        </el-table-column>
+        <el-table-column>
+          <template slot-scope="scope">
+            <el-button
+              @click.native.prevent="saveStore(scope.$index)"
+              v-if="scope.row.isEditing"
+              size="small"
+              type="success"
+              icon="el-icon-check">
+              Save
+            </el-button>
+            <el-button
+              @click.native.prevent="editStore(scope.$index)"
+              v-else
+              size="small"
+              type="primary"
+              icon="el-icon-edit">
+              Edit
+            </el-button>
+            <el-button
+              @click.native.prevent="deleteStore(scope.$index)"
+              size="small"
+              type="danger"
+              icon="el-icon-delete">
+              Delete
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <br />
+      <el-button size="medium" type="success" @click="addStore()">Add Store</el-button>
+    </el-tab-pane>
+
     <!-- setting -->
     <el-tab-pane label="Setting" name="setting">
-      Enable Tab Dev Tools:
-      <el-switch
-        v-model="isDevToolsEnabled"
-        active-text=""
-        inactive-text="">
-      </el-switch>
+      <h3>
+        Enable Tab Dev Tools:
+        <el-switch
+          v-model="isDevToolsEnabled"
+          active-text=""
+          inactive-text="">
+        </el-switch>
+      </h3>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -93,6 +165,7 @@
 </style>
 
 <script>
+import PackageStoreUtil from '../lib/PackageStoreUtil';
 import PackageUtil from '../lib/PackageUtil';
 import RcConfig from '../lib/RcConfig';
 import { remote as electron } from 'electron';
@@ -104,17 +177,65 @@ export default {
       activeName: 'packages_store',
       installingPackageIds: [],
       uninstallingPackageIds: [],
-      storePackageInfos: []
+      storePackageInfos: [],
+      storeDatas: []
     };
   },
   created: function () {
     this.reloadStorePackageInfos();
+    this.reloadStoreInfos();
   },
   methods: {
-    reloadStorePackageInfos: function () {
-      PackageUtil.getAllStorePackages().then(storePackages => {
+    reloadStorePackageInfos: async function () {
+      PackageStoreUtil.getAllStorePackages().then(storePackages => {
         this.storePackageInfos = storePackages;
       });
+    },
+    reloadStoreInfos: async function () {
+      this.storeDatas = (await PackageStoreUtil.getAppStoreDatas())
+        .map(data => Object.assign(data, {isEditing: false}));
+    },
+    addStore: function () {
+      this.storeDatas.push({
+        id: null,
+        name: "",
+        iconUrl: "",
+        apiUrl: "",
+        isAlive: null,
+        isEditing: true
+      });
+    },
+    saveStore: function (index) {
+      let storeId = this.storeDatas[index].id;
+      try {
+        if (storeId != null) {
+          PackageStoreUtil.updateStore(storeId, this.storeDatas[index]);
+        } else {
+          let createdId = PackageStoreUtil.createStore(this.storeDatas[index]);
+          this.storeDatas[index].id = createdId;
+        }
+        this.reloadStoreInfos();
+        this.reloadStorePackageInfos();
+        this.storeDatas[index].isEditing = false;
+      } catch (error) {
+        this.$notify.error({
+          title: 'Error',
+          message: error,
+        });
+      }
+    },
+    editStore: function (index) {
+      this.storeDatas[index].isEditing = true;
+    },
+    deleteStore: function (index) {
+      let storeId = this.storeDatas[index].id;
+      if (confirm("Are you sure delete the store?")) {
+        if (storeId != null) {
+          PackageStoreUtil.deleteStore(storeId);
+        }
+        this.storeDatas.splice(index, 1);
+        this.reloadStorePackageInfos();
+      }
     },
     installPackage: function(packageId) {
       let targetInfo = this.storePackageInfos.find(packageInfo => packageInfo.packageId == packageId);
