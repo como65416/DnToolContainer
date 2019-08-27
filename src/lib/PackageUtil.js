@@ -113,20 +113,20 @@ function uninstallPackage(packageId) {
 /**
  * get all installed package information
  * @return {Object} structure : [
- *     {
- *         "packageId": "package id",
- *         "packageName": "package name",
- *         "directory": "package save dirname",
- *         "iconUri": "icon image file uri",
- *         "description": "package description",
- *         "options": [
- *             {
- *                 name: 'option name',
- *                 fileUri: 'html file uri'
- *             },
- *             ...
- *         ]
- *     }
+ *   {
+ *     "packageId": "package id",
+ *     "packageName": "package name",
+ *     "directory": "package save dirname",
+ *     "iconUri": "icon image file uri",
+ *     "description": "package description",
+ *     "options": [
+ *       {
+ *         name: 'option name',
+ *         fileUri: 'html file uri'
+ *       },
+ *       ...
+ *     ]
+ *   }
  * ]
  */
 function getInstalledPackages() {

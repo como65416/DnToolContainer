@@ -4,6 +4,12 @@ import RcConfig from './RcConfig';
 import CryptoJS from 'crypto-js';
 
 /**
+ * config save path
+ * @type {string}
+ */
+let configPath = RcConfig.getStoragePath() + "/stores.json";
+
+/**
  * get package store datas
  *
  * @return [
@@ -40,6 +46,7 @@ async function getAppStoreDatas() {
  *   apiUrl: apiUrl
  * }
  * @return {int} created store id
+ * @throws {string} if create store failed
  */
 function createStore(createData) {
   let storeDatas = readStoreDatas();
@@ -122,9 +129,6 @@ async function getAllStorePackages() {
  * ]
  */
 function readStoreDatas() {
-  let storagePath = RcConfig.getStoragePath();
-  let configPath = storagePath + "/stores.json";
-
   if (!fs.existsSync(configPath)) {
     saveStoreDatas([
       {
@@ -149,8 +153,6 @@ function readStoreDatas() {
  * ]
  */
 function saveStoreDatas(content) {
-  let storagePath = RcConfig.getStoragePath();
-  let configPath = storagePath + "/stores.json";
   fs.writeFileSync(configPath, JSON.stringify(content, null, 2));
 }
 

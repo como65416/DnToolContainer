@@ -30,6 +30,7 @@ function getPackageInstallPath() {
 
 /**
  * get package package icon director path
+ *
  * @return {string}
  */
 function getIconDirectoryPath() {
