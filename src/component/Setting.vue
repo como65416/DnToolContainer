@@ -20,8 +20,8 @@
         </el-table-column>
         <el-table-column width="140">
           <template slot-scope="scope">
-            <el-button type="success" size="mini" style="width:120px;" icon="el-icon-plus" v-show="scope.row.status == 'not install'" @click="installPackage(scope.row.packageId)">Install</el-button>
-            <el-button type="warning" size="mini" style="width:120px;margin-left: 0px;" icon="el-icon-loading" v-show="scope.row.status == 'installing'" disabled>Installing</el-button>
+            <el-button type="success" size="mini" icon="el-icon-plus" v-if="scope.row.status == 'not install'" @click="installPackage(scope.row.packageId)">Install</el-button>
+            <el-button type="warning" size="mini" icon="el-icon-loading" v-if="scope.row.status == 'installing'" disabled>Installing</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -47,8 +47,8 @@
         </el-table-column>
         <el-table-column width="140">
           <template slot-scope="scope">
-            <el-button type="danger" size="mini" style="width:120px;margin-left: 0px;" icon="el-icon-delete" v-show="scope.row.status == 'installed'" @click="uninstallPackage(scope.row.packageId)">Uninstall</el-button>
-            <el-button type="warning" size="mini" style="width:120px;margin-left: 0px;" icon="el-icon-loading" v-show="scope.row.status == 'uninstalling'" disabled>Uninstalling</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" v-if="scope.row.status == 'installed'" @click="uninstallPackage(scope.row.packageId)">Uninstall</el-button>
+            <el-button type="warning" size="mini" icon="el-icon-loading" v-if="scope.row.status == 'uninstalling'" disabled>Uninstalling</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -58,10 +58,10 @@
 
     <!-- manage store -->
     <el-tab-pane label="Manage Store" name="manage_store">
-      <el-table :data="storeDatas" style="width: 100%" max-height="250">
+      <el-table :data="storeDatas" style="width: 100%">
         <el-table-column width="70" label="Icon">
           <template slot-scope="scope">
-            <img style="max-width:40px;max-height:40px;" :src="scope.row.iconUrl" />
+            <img style="width:36px; height:36px;" :src="scope.row.iconUrl" />
           </template>
         </el-table-column>
         <el-table-column width="70" label="Status">
@@ -164,9 +164,7 @@ export default {
       }
     },
     reloadStorePackageInfos: async function () {
-      PackageStoreUtil.getAllStorePackages().then(storePackages => {
-        this.storePackageInfos = storePackages;
-      });
+      this.storePackageInfos = await PackageStoreUtil.getAllStorePackages();
     },
     reloadStoreInfos: async function () {
       this.storeDatas = (await PackageStoreUtil.getAppStoreDatas())
