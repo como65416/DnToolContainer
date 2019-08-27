@@ -110,6 +110,17 @@ async function getAllStorePackages() {
   return packages;
 }
 
+/**
+ * @param  {array} content
+ * [
+ *   {
+ *     id: id,
+ *     name: name,
+ *     apiUrl: apiUrl
+ *   },
+ *   ...
+ * ]
+ */
 function readStoreDatas() {
   let storagePath = RcConfig.getStoragePath();
   let configPath = storagePath + "/stores.json";
@@ -126,6 +137,17 @@ function readStoreDatas() {
   return JSON.parse(fs.readFileSync(configPath));
 }
 
+/**
+ * @param  {array} content
+ * [
+ *   {
+ *     id: id,
+ *     name: name,
+ *     apiUrl: apiUrl
+ *   },
+ *   ...
+ * ]
+ */
 function saveStoreDatas(content) {
   let storagePath = RcConfig.getStoragePath();
   let configPath = storagePath + "/stores.json";
