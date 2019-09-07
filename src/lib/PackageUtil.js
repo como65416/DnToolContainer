@@ -1,6 +1,5 @@
 import fs from 'fs';
 import RcConfig from './RcConfig';
-import axios from 'axios';
 import http from 'http';
 import https from 'https';
 import AdmZip from 'adm-zip';
@@ -112,48 +111,22 @@ function uninstallPackage(packageId) {
 }
 
 /**
- * get all packages info from all package store
- *
- * @return {Object} structure : [
- *    {
- *      packageId: 'package id',
- *      version: 'version',
- *      packageName: 'package name',
- *      iconUrl: 'package icon url',
- *      description: 'package description',
- *      downloadUrl: 'package download url(zip file)'
- *    },
- *    ...
- * ]
- */
-async function getAllStorePackages() {
-  let storeUrls = RcConfig.getPackageStoreUrls();
-  let packages = [];
-  let config = {headers: {'Content-Type': 'application/json','Cache-Control' : 'no-cache'}};
-  for (let storeUrl of storeUrls) {
-    let response = await axios.get(storeUrl, config);
-    packages = packages.concat(response.data);
-  }
-  return packages;
-}
-
-/**
  * get all installed package information
  * @return {Object} structure : [
- *     {
- *         "packageId": "package id",
- *         "packageName": "package name",
- *         "directory": "package save dirname",
- *         "iconUri": "icon image file uri",
- *         "description": "package description",
- *         "options": [
- *             {
- *                 name: 'option name',
- *                 fileUri: 'html file uri'
- *             },
- *             ...
- *         ]
- *     }
+ *   {
+ *     "packageId": "package id",
+ *     "packageName": "package name",
+ *     "directory": "package save dirname",
+ *     "iconUri": "icon image file uri",
+ *     "description": "package description",
+ *     "options": [
+ *       {
+ *         name: 'option name',
+ *         fileUri: 'html file uri'
+ *       },
+ *       ...
+ *     ]
+ *   }
  * ]
  */
 function getInstalledPackages() {
@@ -178,6 +151,5 @@ export default {
   downloadPackage,
   installPackage,
   uninstallPackage,
-  getAllStorePackages,
   getInstalledPackages
 }

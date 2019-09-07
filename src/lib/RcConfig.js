@@ -30,6 +30,7 @@ function getPackageInstallPath() {
 
 /**
  * get package package icon director path
+ *
  * @return {string}
  */
 function getIconDirectoryPath() {
@@ -55,22 +56,9 @@ function getTempDirectoryPath() {
   return tmpDirectory;
 }
 
-/**
- * get package store urls
- *
- * @return {urls}
- */
-function getPackageStoreUrls() {
-  // TODO: use file to config urls
-  return [
-    'https://como65416.github.io/DnToolContainer-packages/packages/list.v2.json'
-  ];
-}
-
 export default {
   getStoragePath,
   getPackageInstallPath,
   getIconDirectoryPath,
-  getTempDirectoryPath,
-  getPackageStoreUrls
+  getTempDirectoryPath
 }
