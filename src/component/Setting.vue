@@ -61,7 +61,7 @@
       <el-table :data="storeDatas" style="width: 100%">
         <el-table-column width="70" label="Icon">
           <template slot-scope="scope">
-            <img style="width:36px; height:36px;" :src="scope.row.iconUrl" />
+            <img style="width:36px; height:36px;" :src="scope.row.iconUrl" v-show="scope.row.iconUrl != '' && scope.row.iconUrl != null"/>
           </template>
         </el-table-column>
         <el-table-column width="70" label="Status">
