@@ -25,6 +25,8 @@ It can get more and more convenience tool in the future and no need reinstall Ap
 
 * TSV/CSV Editor : https://github.com/como65416/csv-tsv-editor
 
+* Data Generator : https://github.com/como65416/data-generator
+
 ## Usage
 
 ### Install tool from store
