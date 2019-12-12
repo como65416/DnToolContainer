@@ -27,6 +27,8 @@ It can get more and more convenience tool in the future and no need reinstall Ap
 
 * Data Generator : https://github.com/como65416/data-generator
 
+* Compare Utils : https://github.com/como65416/compare-utils
+
 ## Usage
 
 ### Install tool from store
