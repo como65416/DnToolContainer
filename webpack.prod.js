@@ -1,7 +1,7 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { VueLoaderPlugin } = require('vue-loader');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
@@ -42,23 +42,8 @@ module.exports = {
     ]
   },
   optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          warnings: false,
-          parse: {},
-          compress: {},
-          mangle: true,
-          output: null,
-          toplevel: false,
-          nameCache: null,
-          ie8: false,
-          keep_fnames: false,
-          sourceMap: true
-        }
-      }),
-      new OptimizeCSSAssetsPlugin
-    ]
+    minimize: true,
+    minimizer: [new TerserPlugin()],
   },
   plugins: [
     new MiniCssExtractPlugin({
