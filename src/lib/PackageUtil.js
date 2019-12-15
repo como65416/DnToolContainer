@@ -148,7 +148,7 @@ function getInstalledPackages() {
     let installFrom = packageInfo.installFrom;
     let content = JSON.parse(fs.readFileSync(installPackagesPath + packageDir + "/dn-manifest.json"));
     content.iconUri = "file://" + installPackagesPath + packageDir + "/" + content.iconFile;
-    content.options.map(option => Object.assign(option, {fileUri: "file://" + packageDir + "/" + option.file}));
+    content.options.map(option => Object.assign(option, {fileUri: "file://" + installPackagesPath + packageDir + "/" + option.file}));
     installPackageInfos.push(Object.assign({}, content, {installFrom}));
   }
   return installPackageInfos;
