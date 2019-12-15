@@ -103,7 +103,7 @@ function uninstallPackage(packageId) {
         let path = packageDirs[i];
         packageDirs.splice(i, 1);
         fs.writeFileSync(configPath, JSON.stringify(packageDirs, null, 4));
-        rimraf(path, function () {});
+        rimraf(installPackagesPath + path, function () {});
         resolve();
       }
     }
