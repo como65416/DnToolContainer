@@ -72,8 +72,7 @@
         </el-table-column>
         <el-table-column width="160" label="Store Name">
           <template slot-scope="scope">
-            <el-input v-if="scope.row.isEditing" v-model="scope.row.name"></el-input>
-            <span v-else>{{ scope.row.name }}</span>
+            <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="API">

@@ -28,6 +28,7 @@ async function getAppStoreDatas() {
   for (let storeData of storeDatas) {
     try {
       let response = await axios.get(storeData.apiUrl);
+      storeData.name = response.data.storeName;
       storeData.iconUrl = response.data.storeIcon;
       storeData.isAlive = true;
     } catch (error) {
@@ -35,6 +36,7 @@ async function getAppStoreDatas() {
       storeData.isAlive = false;
     }
   }
+  saveStoreDatas(storeDatas);
 
   return storeDatas;
 }
@@ -73,7 +75,6 @@ function updateStore(storeId, updateData) {
   let storeDatas = readStoreDatas();
   let targetData = storeDatas.find(data => data.id == storeId);
   Object.assign(targetData, {
-    name: updateData.name,
     apiUrl: updateData.apiUrl
   });
   saveStoreDatas(storeDatas);
@@ -133,7 +134,7 @@ function readStoreDatas() {
     saveStoreDatas([
       {
         "id": "U2FsdGVkX19JXGUcwVa8uCuglXBGXWL465k1mrnCbRFX1gjFfqOhD6KB+I3HMF59OeeiNW80f1A0G1CguFgfZMvz3XUi/8jDrB08Trem1fNfcihpDUgIIQYEwrv2Guf1",
-        "name": "Default Store",
+        "name": "DN Tool Store",
         "apiUrl": "https://como65416.github.io/DnToolContainer-packages/packages/api.v1.json"
       }
     ]);
