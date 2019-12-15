@@ -217,6 +217,13 @@ export default {
       PackageUtil.downloadPackage(targetInfo.downloadUrl)
         .then(packagePath => {
           PackageUtil.installPackage(packagePath, targetInfo.provideStoreName)
+            .then(info => {
+              this.notifyMessage('success', 'Install Success');
+              this.$store.commit('reloadInstalledPackages');
+            })
+            .catch(err => {
+              this.notifyMessage('error', 'Install Fail : ' + err);
+            })
             .finally(() => {
               fs.unlinkSync(packagePath);
             });

@@ -36,59 +36,52 @@ function downloadPackage(packageUrl) {
  *
  * @param  {string} packageFilePath
  */
-function installPackage(packageFilePath, packageFrom) {
-  return new Promise(function (resolve, reject) {
-    let installPackagesPath = RcConfig.getPackageInstallPath();
-    let dirName = "pak-" + (new Date().getTime());
-    let packageDir = installPackagesPath + dirName;
+async function installPackage(packageFilePath, packageFrom) {
+  let installPackagesPath = RcConfig.getPackageInstallPath();
+  let dirName = "pak-" + (new Date().getTime());
+  let packageDir = installPackagesPath + dirName;
 
-    var zip = new AdmZip(packageFilePath);
-    var zipEntries = zip.getEntries();
-    zip.extractAllTo(packageDir, true);
+  var zip = new AdmZip(packageFilePath);
+  var zipEntries = zip.getEntries();
+  zip.extractAllTo(packageDir, true);
 
-    let manifestPath = packageDir + "/dn-manifest.json";
-    if (!fs.existsSync(manifestPath)) {
-      reject('dn-manifest.json not found');
-      rimraf(packageDir, function () {});
-      return;
-    } else {
-      let mainifestContent = JSON.parse(fs.readFileSync(manifestPath));
-      let keyNotExists = ['packageId', 'version', 'packageName', 'iconFile', 'description', 'options'].filter(x => !Object.keys(mainifestContent).includes(x));
-      // check dn-manifest.json
-      if (keyNotExists.length != 0) {
-        reject("dn-manifest.json " + keyNotExists.join(",") + " not write");
-        return;
-      }
-      // check is installed or not
-      if (getInstalledPackages().find(pacakgeInfo => pacakgeInfo.packageId == mainifestContent.packageId) != null) {
-        reject("this package already installed");
-        return;
-      }
-      // check icon and options file exists or not
-      if (!fs.existsSync(packageDir + "/" + mainifestContent.iconFile)) {
-        reject('icon not found');
-        return;
-      }
-      for (let option of mainifestContent.options) {
-        if (!fs.existsSync(packageDir + "/" + option.file)) {
-          reject(option.file + ' not found');
-          rimraf(packageDir, function () {});
-          return;
-        }
+  let manifestPath = packageDir + "/dn-manifest.json";
+  if (!fs.existsSync(manifestPath)) {
+    rimraf(packageDir, function () {});
+    throw 'dn-manifest.json not found';
+  } else {
+    let mainifestContent = JSON.parse(fs.readFileSync(manifestPath));
+    let keyNotExists = ['packageId', 'version', 'packageName', 'iconFile', 'description', 'options'].filter(x => !Object.keys(mainifestContent).includes(x));
+    // check dn-manifest.json
+    if (keyNotExists.length != 0) {
+      throw 'dn-manifest.json ' + keyNotExists.join(',') + ' not write';
+    }
+    // check is installed or not
+    if (getInstalledPackages().find(pacakgeInfo => pacakgeInfo.packageId == mainifestContent.packageId) != null) {
+      throw "this package already installed";
+    }
+    // check icon and options file exists or not
+    if (!fs.existsSync(packageDir + '/' + mainifestContent.iconFile)) {
+      throw 'icon not found';
+    }
+    for (let option of mainifestContent.options) {
+      if (!fs.existsSync(packageDir + "/" + option.file)) {
+        rimraf(packageDir, function () {});
+        throw option.file + ' not found';
       }
     }
+  }
 
-    // update packages.json
-    let configPath = installPackagesPath + "packages.json";
-    let packageInfos = (fs.existsSync(configPath)) ? JSON.parse(fs.readFileSync(configPath)): [];
-    packageInfos.push({
-      dir: dirName,
-      installFrom: packageFrom,
-      installTime: Math.ceil(((new Date).getTime() / 1000)),
-    });
-    fs.writeFileSync(configPath, JSON.stringify(packageInfos, null, 4));
-    resolve(manifestPath);
+  // update packages.json
+  let configPath = installPackagesPath + "packages.json";
+  let packageInfos = (fs.existsSync(configPath)) ? JSON.parse(fs.readFileSync(configPath)): [];
+  packageInfos.push({
+    dir: dirName,
+    installFrom: packageFrom,
+    installTime: Math.ceil(((new Date).getTime() / 1000)),
   });
+  fs.writeFileSync(configPath, JSON.stringify(packageInfos, null, 4));
+  return manifestPath;
 }
 
 /**
