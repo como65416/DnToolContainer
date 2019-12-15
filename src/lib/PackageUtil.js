@@ -89,22 +89,19 @@ async function installPackage(packageFilePath, packageFrom) {
  *
  * @param  {Object} packageId package id
  */
-function uninstallPackage(packageId) {
-  return new Promise(function (resolve, reject) {
-    let installPackagesPath = RcConfig.getPackageInstallPath();
-    let configPath = installPackagesPath + "packages.json";
-    let packageInfos = JSON.parse(fs.readFileSync(configPath));
-    for (let i in packageInfos) {
-      let packageDir = packageInfos[i].dir;
-      let manifestContent = JSON.parse(fs.readFileSync(installPackagesPath + "/" + packageDir + "/dn-manifest.json"));
-      if (manifestContent.packageId == packageId) {
-        packageInfos.splice(i, 1);
-        fs.writeFileSync(configPath, JSON.stringify(packageInfos, null, 4));
-        rimraf(installPackagesPath + packageDir, function () {});
-        resolve();
-      }
+async function uninstallPackage(packageId) {
+  let installPackagesPath = RcConfig.getPackageInstallPath();
+  let configPath = installPackagesPath + "packages.json";
+  let packageInfos = JSON.parse(fs.readFileSync(configPath));
+  for (let i in packageInfos) {
+    let packageDir = packageInfos[i].dir;
+    let manifestContent = JSON.parse(fs.readFileSync(installPackagesPath + "/" + packageDir + "/dn-manifest.json"));
+    if (manifestContent.packageId == packageId) {
+      packageInfos.splice(i, 1);
+      fs.writeFileSync(configPath, JSON.stringify(packageInfos, null, 4));
+      rimraf(installPackagesPath + packageDir, function () {});
     }
-  });
+  }
 }
 
 /**
