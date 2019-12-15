@@ -108,13 +108,17 @@ async function getAllStorePackages() {
   let config = {headers: {'Content-Type': 'application/json', 'Cache-Control': 'no-cache'}};
   for (let appStoreData of appStoreDatas) {
     let response = await axios.get(appStoreData.apiUrl, config);
+    let storeName = response.data.storeName;
     let storePackages = response.data.packages;
     for (let storePackage of storePackages) {
       if (packages.find(data => data.packageId == storePackage.packageId) == null) {
-        packages.push(storePackage);
+        packages.push(Object.assign({}, storePackage, {
+          provideStoreName: storeName
+        }));
       }
     }
   }
+
   return packages;
 }
 

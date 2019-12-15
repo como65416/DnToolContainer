@@ -36,7 +36,7 @@ function downloadPackage(packageUrl) {
  *
  * @param  {string} packageFilePath
  */
-function installPackage(packageFilePath) {
+function installPackage(packageFilePath, packageFrom) {
   return new Promise(function (resolve, reject) {
     let installPackagesPath = RcConfig.getPackageInstallPath();
     let dirName = "pak-" + (new Date().getTime());
@@ -80,9 +80,13 @@ function installPackage(packageFilePath) {
 
     // update packages.json
     let configPath = installPackagesPath + "packages.json";
-    let packageDirs = (fs.existsSync(configPath)) ? JSON.parse(fs.readFileSync(configPath)): [];
-    packageDirs.push(dirName);
-    fs.writeFileSync(configPath, JSON.stringify(packageDirs, null, 4));
+    let packageInfos = (fs.existsSync(configPath)) ? JSON.parse(fs.readFileSync(configPath)): [];
+    packageInfos.push({
+      dir: dirName,
+      installFrom: packageFrom,
+      installTime: Math.ceil(((new Date).getTime() / 1000)),
+    });
+    fs.writeFileSync(configPath, JSON.stringify(packageInfos, null, 4));
     resolve(manifestPath);
   });
 }
@@ -96,14 +100,14 @@ function uninstallPackage(packageId) {
   return new Promise(function (resolve, reject) {
     let installPackagesPath = RcConfig.getPackageInstallPath();
     let configPath = installPackagesPath + "packages.json";
-    let packageDirs = JSON.parse(fs.readFileSync(configPath));
-    for (let i in packageDirs) {
-      let manifestContent = JSON.parse(fs.readFileSync(installPackagesPath + "/" + packageDirs[i] + "/dn-manifest.json"));
+    let packageInfos = JSON.parse(fs.readFileSync(configPath));
+    for (let i in packageInfos) {
+      let packageDir = packageInfos[i].dir;
+      let manifestContent = JSON.parse(fs.readFileSync(installPackagesPath + "/" + packageDir + "/dn-manifest.json"));
       if (manifestContent.packageId == packageId) {
-        let path = packageDirs[i];
-        packageDirs.splice(i, 1);
-        fs.writeFileSync(configPath, JSON.stringify(packageDirs, null, 4));
-        rimraf(installPackagesPath + path, function () {});
+        packageInfos.splice(i, 1);
+        fs.writeFileSync(configPath, JSON.stringify(packageInfos, null, 4));
+        rimraf(installPackagesPath + packageDir, function () {});
         resolve();
       }
     }
@@ -119,6 +123,7 @@ function uninstallPackage(packageId) {
  *     "directory": "package save dirname",
  *     "iconUri": "icon image file uri",
  *     "description": "package description",
+ *     "installFrom": "install from",
  *     "options": [
  *       {
  *         name: 'option name',
@@ -136,13 +141,15 @@ function getInstalledPackages() {
   if (!fs.existsSync(configPath)) {
     fs.writeFileSync(configPath, '[]');
   }
-  let packageDirs = JSON.parse(fs.readFileSync(configPath));
+  let packageInfos = JSON.parse(fs.readFileSync(configPath));
   let installPackageInfos = [];
-  for (let packageDir of packageDirs) {
+  for (let packageInfo of packageInfos) {
+    let packageDir = packageInfo.dir;
+    let installFrom = packageInfo.installFrom;
     let content = JSON.parse(fs.readFileSync(installPackagesPath + packageDir + "/dn-manifest.json"));
     content.iconUri = "file://" + installPackagesPath + packageDir + "/" + content.iconFile;
-    content.options.map(option => Object.assign(option, {fileUri: "file://" + installPackagesPath + packageDir + "/" + option.file}));
-    installPackageInfos.push(content);
+    content.options.map(option => Object.assign(option, {fileUri: "file://" + packageDir + "/" + option.file}));
+    installPackageInfos.push(Object.assign({}, content, {installFrom}));
   }
   return installPackageInfos;
 }

@@ -10,7 +10,8 @@
         </el-table-column>
         <el-table-column label="Name" width="240">
           <template slot-scope="scope">
-            <span>{{ scope.row.packageName }}</span>
+            <div style="font-size:14px;"><strong>{{ scope.row.packageName }}</strong></div>
+            <div style="text-align:right; font-size:12px;">Provide by <span style="color:blue;">{{ scope.row.provideStoreName }}</span></div>
           </template>
         </el-table-column>
         <el-table-column label="Description">
@@ -37,7 +38,8 @@
         </el-table-column>
         <el-table-column label="Name" width="240">
           <template slot-scope="scope">
-            {{ scope.row.packageName }}
+            <div style="font-size:14px;"><strong>{{ scope.row.packageName }}</strong></div>
+            <div style="text-align:right; font-size:12px;">Installed from <span style="color:blue;">{{ scope.row.installFrom }}</span></div>
           </template>
         </el-table-column>
         <el-table-column label="Description">
@@ -214,7 +216,7 @@ export default {
       this.installingPackageIds.push(packageId);
       PackageUtil.downloadPackage(targetInfo.downloadUrl)
         .then(packagePath => {
-          PackageUtil.installPackage(packagePath)
+          PackageUtil.installPackage(packagePath, targetInfo.provideStoreName)
             .finally(() => {
               fs.unlinkSync(packagePath);
             });
@@ -230,10 +232,10 @@ export default {
         });
     },
     installCustomPacakage() {
-      let selectedFiles = electron.dialog.showOpenDialog({ properties: ['openFile'] });
+      let selectedFiles = electron.dialog.showOpenDialogSync({ properties: ['openFile'] });
       if (selectedFiles != null) {
         let packagePath = selectedFiles[0];
-        PackageUtil.installPackage(packagePath)
+        PackageUtil.installPackage(packagePath, "Custom Package")
           .then(info => {
             this.notifyMessage('success', 'Install Success');
             this.$store.commit('reloadInstalledPackages');
