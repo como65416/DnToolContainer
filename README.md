@@ -31,6 +31,8 @@ It can get more and more convenience tool in the future and no need reinstall Ap
 
 * [QR Code Utils](https://github.com/como65416/QR-Code-Utils)
 
+* [Image Text OCR](https://github.com/como65416/Image-Text-OCR)
+
 ## Usage
 
 ### Install tool from store
