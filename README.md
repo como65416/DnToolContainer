@@ -72,6 +72,8 @@ You can package your tools by [DN Tool Packager](https://github.com/como65416/dn
 
 You can install your custom package store server : [DN Tool Container Store API Server](https://github.com/como65416/DN-Tool-Container-Store-API-Server)
 
+※ API document: [Link](https://como65416.github.io/DN-Tool-Container-Store-API-Server/)
+
 ### Add custom package store to DnToolContainer
 
 * Open the Applcation and click ![icon](resource/icon01.png) button
