@@ -21,7 +21,7 @@
     "babel-loader": "^8.0.4",
     "css-loader": "^3.1.0",
     "electron": "^8.2.3",
-    "electron-packager": "^14.0.4",
+    "electron-packager": "^14.2.1",
     "file-loader": "^1.1.11",
     "mini-css-extract-plugin": "^0.4.4",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
@@ -32,7 +32,7 @@
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.36.1",
     "webpack-cli": "^3.3.6",
-    "webpack-dev-server": "^3.7.2"
+    "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",
