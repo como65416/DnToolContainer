@@ -221,7 +221,7 @@ export default {
         this.notifyMessage('success', 'Install "' + targetInfo.packageName + '" Success');
         this.$store.commit('reloadInstalledPackages');
         this.installingPackageIds.splice(this.installingPackageIds.indexOf(packageId), 1);
-      } catch (err) {
+      } catch (error) {
         this.notifyMessage('error', 'Install "' + targetInfo.packageName + '" Fail : ' + error,);
         this.installingPackageIds.splice(this.installingPackageIds.indexOf(packageId), 1);
       } finally {
