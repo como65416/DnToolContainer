@@ -10,7 +10,8 @@ function createWindow() {
     icon: __dirname + '/icon.png',
     webPreferences: {
       nodeIntegration: true,
-      webviewTag: true
+      webviewTag: true,
+      webSecurity: false,
     }
   };
 
@@ -36,7 +37,6 @@ function createWindow() {
 
   if (process.argv.includes('--dev')) {
     indexPageURL = `http://localhost:8089/index.html`;
-    windowConfig.webPreferences.webSecurity = false;
     menuTemplate.push({
       label: 'Development',
       submenu: [
