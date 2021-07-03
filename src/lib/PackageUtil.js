@@ -67,7 +67,7 @@ async function installPackage(packageFilePath, packageFrom) {
     for (let option of mainifestContent.options) {
       if (!fs.existsSync(packageDir + "/" + option.file)) {
         rimraf(packageDir, function () {});
-        throw option.file + ' not found';
+        throw new Error(`${option.file} not found`);
       }
     }
   }
