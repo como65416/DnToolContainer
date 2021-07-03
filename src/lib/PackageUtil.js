@@ -42,7 +42,6 @@ async function installPackage(packageFilePath, packageFrom) {
   let packageDir = installPackagesPath + dirName;
 
   var zip = new AdmZip(packageFilePath);
-  var zipEntries = zip.getEntries();
   zip.extractAllTo(packageDir, true);
 
   let manifestPath = packageDir + "/dn-manifest.json";
