@@ -48,21 +48,21 @@ async function installPackage(packageFilePath, packageFrom) {
   let manifestPath = packageDir + "/dn-manifest.json";
   if (!fs.existsSync(manifestPath)) {
     rimraf(packageDir, function () {});
-    throw 'dn-manifest.json not found';
+    throw new Error('dn-manifest.json not found');
   } else {
     let mainifestContent = JSON.parse(fs.readFileSync(manifestPath));
     let keyNotExists = ['packageId', 'version', 'packageName', 'iconFile', 'description', 'options'].filter(x => !Object.keys(mainifestContent).includes(x));
     // check dn-manifest.json
     if (keyNotExists.length != 0) {
-      throw 'dn-manifest.json ' + keyNotExists.join(',') + ' not write';
+      throw new Error('dn-manifest.json ' + keyNotExists.join(',') + ' not write');
     }
     // check is installed or not
     if (getInstalledPackages().find(pacakgeInfo => pacakgeInfo.packageId == mainifestContent.packageId) != null) {
-      throw "this package already installed";
+      throw new Error('this package already installed');
     }
     // check icon and options file exists or not
     if (!fs.existsSync(packageDir + '/' + mainifestContent.iconFile)) {
-      throw 'icon not found';
+      throw new Error('icon not found');
     }
     for (let option of mainifestContent.options) {
       if (!fs.existsSync(packageDir + "/" + option.file)) {

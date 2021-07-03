@@ -54,7 +54,7 @@ function createStore(createData) {
   let storeDatas = readStoreDatas();
   let targetData = storeDatas.find(data => data.apiUrl == createData.apiUrl);
   if (targetData != null) {
-    throw "Store already exist";
+    throw new Error('Store already exist');
   }
   let secretKey = "FSADgaf7fsd";
   let createdId = CryptoJS.AES.encrypt(createData.apiUrl, secretKey).toString()
