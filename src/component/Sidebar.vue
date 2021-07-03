@@ -38,8 +38,6 @@
 </style>
 
 <script>
-import RcConfig from '../lib/RcConfig';
-
 export default {
   data() {
     return {

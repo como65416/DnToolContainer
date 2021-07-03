@@ -24,7 +24,6 @@
 </style>
 
 <script>
-import ConfigManager from './lib/ConfigManager';
 import Setting from './component/Setting.vue';
 import Sidebar from './component/Sidebar.vue';
 import MainContain from './component/MainContain.vue';

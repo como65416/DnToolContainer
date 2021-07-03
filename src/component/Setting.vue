@@ -131,7 +131,6 @@
 <script>
 import PackageStoreUtil from '../lib/PackageStoreUtil';
 import PackageUtil from '../lib/PackageUtil';
-import RcConfig from '../lib/RcConfig';
 import { remote as electron } from 'electron';
 import fs from 'fs';
 
