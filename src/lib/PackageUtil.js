@@ -17,7 +17,7 @@ function downloadPackage(packageUrl) {
 
   return new Promise(function(resolve, reject) {
     let httpClient = (packageUrl.indexOf('https://') == 0) ? https : http ;
-      httpClient.get(packageUrl, function(response) {
+    httpClient.get(packageUrl, function(response) {
       response.pipe(saveFile);
       saveFile.on('finish', function() {
         saveFile.close(function () {
@@ -50,19 +50,24 @@ async function installPackage(packageFilePath, packageFrom) {
     throw new Error('dn-manifest.json not found');
   } else {
     let mainifestContent = JSON.parse(fs.readFileSync(manifestPath));
-    let keyNotExists = ['packageId', 'version', 'packageName', 'iconFile', 'description', 'options'].filter(x => !Object.keys(mainifestContent).includes(x));
+    let requiredKeys = ['packageId', 'version', 'packageName', 'iconFile', 'description', 'options'];
+    let keyNotExists = requiredKeys.filter(x => !Object.keys(mainifestContent).includes(x));
+
     // check dn-manifest.json
     if (keyNotExists.length != 0) {
       throw new Error('dn-manifest.json ' + keyNotExists.join(',') + ' not write');
     }
+
     // check is installed or not
     if (getInstalledPackages().find(pacakgeInfo => pacakgeInfo.packageId == mainifestContent.packageId) != null) {
       throw new Error('this package already installed');
     }
+
     // check icon and options file exists or not
     if (!fs.existsSync(packageDir + '/' + mainifestContent.iconFile)) {
       throw new Error('icon not found');
     }
+
     for (let option of mainifestContent.options) {
       if (!fs.existsSync(packageDir + "/" + option.file)) {
         rimraf(packageDir, function () {});
@@ -80,6 +85,7 @@ async function installPackage(packageFilePath, packageFrom) {
     installTime: Math.ceil(((new Date).getTime() / 1000)),
   });
   fs.writeFileSync(configPath, JSON.stringify(packageInfos, null, 4));
+
   return manifestPath;
 }
 
@@ -140,6 +146,7 @@ function getInstalledPackages() {
     content.options.map(option => Object.assign(option, {fileUri: "file://" + installPackagesPath + packageDir + "/" + option.file}));
     installPackageInfos.push(Object.assign({}, content, {installFrom}));
   }
+
   return installPackageInfos;
 }
 
