@@ -4,7 +4,7 @@
   "main": "electron-main.js",
   "dependencies": {
     "adm-zip": "^0.4.11",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "crypto-js": "^3.1.9-1",
     "element-ui": "^2.11.1",
     "rimraf": "^2.6.2",
