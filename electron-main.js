@@ -10,6 +10,7 @@ function createWindow() {
     icon: __dirname + '/icon.png',
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       webviewTag: true,
       webSecurity: false,
     }
