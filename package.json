@@ -20,7 +20,7 @@
     "@babel/runtime": "^7.17.5",
     "babel-loader": "^8.0.4",
     "css-loader": "^3.1.0",
-    "electron": "^17.1.0",
+    "electron": "^17.2.0",
     "electron-packager": "^15.0.0",
     "file-loader": "^1.1.11",
     "mini-css-extract-plugin": "^0.4.4",
